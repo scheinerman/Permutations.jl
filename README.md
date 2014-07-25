@@ -73,7 +73,8 @@ julia> p*q
 (1)(2)(3)(4)(5)(6)
 ```
 
-To get the cycle structure of a `Permutation` (not as a character string, but as an array of arrays), use \verb|cycles|:
+To get the cycle structure of a `Permutation` (not as a character string,
+but as an array of arrays), use `cycles`:
 ```julia
 julia> cycles(p)
 3-element Array{Array{Int64,1},1}:
