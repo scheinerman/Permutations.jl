@@ -26,6 +26,7 @@ as follows:
 ```julia
 julia> array(p)
 6-element Array{Int64,1}:
+ 4
  1
  3
  2
