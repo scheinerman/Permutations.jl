@@ -26,11 +26,6 @@ as follows:
 ```julia
 julia> array(p)
 6-element Array{Int64,1}:
- 4\begin{verbatim}
-julia> p[7]
-ERROR: BoundsError()
- in getindex at ....
-
  1
  3
  2
@@ -50,7 +45,6 @@ julia> p[2]
 ```
 Of course, bad things happen if an inappropriate element is given:
 ```julia
-\begin{verbatim}
 julia> p[7]
 ERROR: BoundsError()
  in getindex at ....
@@ -103,8 +97,6 @@ julia> matrix(p)
  0  0  1  0  0  0
  0  0  0  1  0  0
 ```
-
-
 
 The parity of a `Permutation` is computed using `parity` which returns `0` for an even permutation and `1` for an odd permutation:
 ```julia
