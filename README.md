@@ -2,11 +2,11 @@ Permutations
 ============
 
 This is documentation for a `Permutation` data type for Julia. We only
-consider permutations of sets of the form `{1,2,3,...,n}` where `n` is a positive
-integer. 
+consider permutations of sets of the form `{1,2,3,...,n}` where `n` is
+a positive integer.
 
-A `Permutation` object is created from a one-dimensional arry of integers containing 
-each of the values `1` through `n` exactly once. 
+A `Permutation` object is created from a one-dimensional arry of
+integers containing each of the values `1` through `n` exactly once.
 ```julia
 julia> a = [4,1,3,2,6,5];
 julia> p = Permutation(a)
@@ -14,15 +14,16 @@ julia> p = Permutation(a)
 ```
 Observe the `Permutation` is printed in disjoint cycle format. 
 
-The number of elements in a `Permutation` is determined using the `length` function:
+The number of elements in a `Permutation` is determined using the
+`length` function:
 ```julia
 julia> length(p)
 6
 ```
 
-A `Permutation` can be converted to an array (equal to the array used to construct
-the `Permutation` in the first place) or can be presented as a two-row matrix 
-as follows:
+A `Permutation` can be converted to an array (equal to the array used
+to construct the `Permutation` in the first place) or can be presented
+as a two-row matrix as follows:
 ```julia
 julia> array(p)
 6-element Array{Int64,1}:
@@ -63,7 +64,8 @@ julia> p*q
 julia> q*p
 (1,3,2)(4,6)(5)
 ```
-Repeated composition is calculated using `^`, like this: `p^n`. The exponent can be negative. 
+Repeated composition is calculated using `^`, like this: `p^n`. 
+The exponent can be negative. 
 
 The inverse of a `Permtuation` is computed using `inv`:
 ```julia
@@ -83,10 +85,10 @@ julia> cycles(p)
  [5,6]  
 ```
 
-The function `matrix` converts a permutation `P` to a square
-matrix whose `i,j`-entry is `1` when `j == P[i]` and `0`
-otherwise. By default, this creates a matrix with full storage; to get
-a sparse result use `matrix(p,true)`. 
+The function `matrix` converts a permutation `P` to a square matrix
+whose `i,j`-entry is `1` when `j == P[i]` and `0` otherwise. By
+default, this creates a matrix with full storage; to get a sparse
+result use `matrix(p,true)`.
 ```julia
 julia> p = RandomPermutation(6)
 (1,2,6,4)(3,5)
@@ -100,7 +102,8 @@ julia> matrix(p)
  0  0  0  1  0  0
 ```
 
-The parity of a `Permutation` is computed using `parity` which returns `0` for an even permutation and `1` for an odd permutation:
+The parity of a `Permutation` is computed using `parity` which returns
+`0` for an even permutation and `1` for an odd permutation:
 ```julia
 julia> parity(p)
 1
