@@ -129,7 +129,3 @@ this requires `k` to be between `1` and `n!`.
 julia> Permutation(6,701)
 (1,6,3)(2,5)(4)
 ```
-
-
-
-
