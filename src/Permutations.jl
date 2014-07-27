@@ -1,3 +1,6 @@
+# Module written by Ed Scheinerman, ers@jhu.edu
+# distributed under terms of the MIT license
+
 module Permutations
 
 import Base.length, Base.show, Base.inv
