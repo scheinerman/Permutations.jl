@@ -99,6 +99,9 @@ end
 # Create a nice, printable string representation from the cycle
 # structure of a permutation
 function cycle_string(p::Permutation)
+    if length(p)==0
+        return "()"
+    end
     str = ""
     cc = cycles(p)
     for c in cc
