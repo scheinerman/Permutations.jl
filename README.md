@@ -12,7 +12,7 @@ julia> a = [4,1,3,2,6,5];
 julia> p = Permutation(a)
 (1,4,2)(3)(5,6)
 ```
-Observe the `Permutation` is printed in disjoint cycle format. 
+Observe the `Permutation` is printed in disjoint cycle format.
 
 The number of elements in a `Permutation` is determined using the
 `length` function:
@@ -64,8 +64,8 @@ julia> p*q
 julia> q*p
 (1,3,2)(4,6)(5)
 ```
-Repeated composition is calculated using `^`, like this: `p^n`. 
-The exponent can be negative. 
+Repeated composition is calculated using `^`, like this: `p^n`.
+The exponent can be negative.
 
 The inverse of a `Permtuation` is computed using `inv`:
 ```julia
@@ -81,8 +81,8 @@ but as an array of arrays), use `cycles`:
 julia> cycles(p)
 3-element Array{Array{Int64,1},1}:
  [1,4,2]
- [3]    
- [5,6]  
+ [3]
+ [5,6]
 ```
 
 The function `matrix` converts a permutation `P` to a square matrix
@@ -116,7 +116,7 @@ Additional constructors
 For convenience, identity and random permutations can be constructed
 like this:
 ```julia
-julia> IdentityPermutation(10)
+julia> Permutation(10)
 (1)(2)(3)(4)(5)(6)(7)(8)(9)(10)
 julia> RandomPermutation(10)
 (1,7,6,10,3,2,8,4)(5,9)

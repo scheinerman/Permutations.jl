@@ -4,7 +4,7 @@
 module Permutations
 
 import Base.length, Base.show, Base.inv
-export Permutation, IdentityPermutation, RandomPermutation
+export Permutation, RandomPermutation
 export length, getindex, array, two_row
 export inv, cycles, cycle_string, parity
 export order, matrix
@@ -17,7 +17,7 @@ immutable Permutation
         if sort(dat) != 1:n
             error("Improper array: must be a permutation of 1:n")
         end
-        new(dat) 
+        new(dat)
     end
 end
 
@@ -26,12 +26,13 @@ function Permutation(n,k)
     return Permutation(nthperm([1:n],k))
 end
 
-IdentityPermutation(n::Int) = Permutation([1:n])
+# create the identity permutation
+Permutation(n::Int) = Permutation([1:n])
 
 RandomPermutation(n::Int) = Permutation(randperm(n))
 
 # Returns the number of elements in the Permtuation
-function length(p::Permutation) 
+function length(p::Permutation)
     return length(p.data)
 end
 
@@ -67,7 +68,7 @@ end
 # Inverse of a permutation
 function inv(p::Permutation)
     n = length(p)
-    data = zeros(Int,n) 
+    data = zeros(Int,n)
     for k=1:n
         j = p[k]
         data[j] = k
@@ -147,7 +148,7 @@ end
 # Extend p^n so negative exponents work too
 function ^(p::Permutation, n::Int)
     if n==0
-        return IdentityPermutation(length(p))
+        return Permutation(length(p))
     end
     if n<0
         return inv(p)^(-n)
@@ -166,7 +167,7 @@ function ^(p::Permutation, n::Int)
     return p*q*q
 end
 
-# Represent as a permtuation matrix. 
+# Represent as a permtuation matrix.
 function matrix(p::Permutation, sparse::Bool = false)
     n = length(p)
     if sparse
