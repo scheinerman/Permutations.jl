@@ -129,3 +129,51 @@ this requires `k` to be between `1` and `n!`.
 julia> Permutation(6,701)
 (1,6,3)(2,5)(4)
 ```
+
+
+Properties
+----------
+
+A *fixed point* of a permutation `p` is a value `k` such that
+`p[k]==k`. The function `fixed_points` returns a list of the fixed
+points of a given permutation.
+```julia
+julia> p = RandomPermutation(20)
+(1,15,10,9,11,13,12,8,5,7,18,6,2)(3)(4,16,17,19)(14)(20)
+
+julia> fixed_points(p)
+3-element Array{Int64,1}:
+  3
+ 14
+ 20
+```
+
+The function `longest_increasing` finds a subsequence of a permutation
+whose elements are in increasing order. Likewise, `longest_decreasing`
+finds a longest decreasing subsequence.
+For example:
+```julia
+julia> p = RandomPermutation(10)
+(1,3,10)(2)(4)(5,6)(7)(8)(9)
+
+julia> two_row(p)
+2x10 Array{Int64,2}:
+ 1  2   3  4  5  6  7  8  9  10
+ 3  2  10  4  6  5  7  8  9   1
+
+julia> longest_increasing(p)
+6-element Array{Int64,1}:
+ 3
+ 4
+ 6
+ 7
+ 8
+ 9
+
+julia> longest_decreasing(p)
+4-element Array{Int64,1}:
+ 10
+  6
+  5
+  1
+```

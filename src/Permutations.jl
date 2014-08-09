@@ -7,7 +7,8 @@ import Base.length, Base.show, Base.inv
 export Permutation, RandomPermutation
 export length, getindex, array, two_row
 export inv, cycles, cycle_string, parity
-export order, matrix
+export order, matrix, fixed_points
+export longest_increasing, longest_decreasing
 
 # Defines the Permutation class. Permutations are bijections of 1:n.
 immutable Permutation
@@ -181,5 +182,45 @@ function matrix(p::Permutation, sparse::Bool = false)
     return A[array(p),:]
 end
 
+# find the fixed points of a Permutation
+fixed_points(p::Permutation) = find([ p[k]==k for k in 1:length(p)])
+    
+# Find a longest monotone subsequence of p in a given direction. This
+# is not exposed, but it is used by longest_increasing and
+# longest_increasing.
+function longest_monotone(p::Permutation, order=<)
+    n = length(p)
+    if n==0
+        return Int[]
+    end
+    scores = ones(Int,n)
+    scores[n] = 1
+    
+    for k=n-1:-1:1
+        for i=k+1:n
+            if order(p[k],p[i]) && scores[k] <= scores[i]
+                scores[k] = scores[i]+1
+            end
+        end
+    end
+    
+    seq = Int[]
+    mx = maximum(scores)
+    a = findfirst([s == mx for s in scores])
+    push!(seq,a)
+
+    while scores[a] > 1
+        val = scores[a]-1
+        idx = findfirst([scores[k]==val && order(p[a],p[k]) for k=a+1:n ])
+        a += idx
+        push!(seq,a)
+    end
+
+    return [p[i] for i in seq]
+
+end
+
+longest_increasing(p::Permutation) = longest_monotone(p,<)
+longest_decreasing(p::Permutation) = longest_monotone(p,>)
 
 end # end of module Permutations
