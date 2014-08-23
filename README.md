@@ -111,6 +111,25 @@ julia> parity(p*p)
 0
 ```
 
+If one thinks of a permutation as a sequence, then applying `reverse`
+to that permutation returns a new permutation based on the reversal of
+that sequnce. Here's an example:
+```julia
+julia> p = RandomPermutation(8)
+(1,5,8,4,6)(2,3)(7)
+
+julia> two_row(p)
+2x8 Array{Int64,2}:
+ 1  2  3  4  5  6  7  8
+ 5  3  2  6  8  1  7  4
+
+julia> two_row(reverse(p))
+2x8 Array{Int64,2}:
+ 1  2  3  4  5  6  7  8
+ 4  7  1  8  6  2  3  5
+```
+
+
 Additional constructors
 -----------------------
 For convenience, identity and random permutations can be constructed

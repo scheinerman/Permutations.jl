@@ -3,12 +3,13 @@
 
 module Permutations
 
-import Base.length, Base.show, Base.inv
+import Base.length, Base.show, Base.inv, Base.reverse
+
 export Permutation, RandomPermutation
 export length, getindex, array, two_row
 export inv, cycles, cycle_string, parity
 export order, matrix, fixed_points
-export longest_increasing, longest_decreasing
+export longest_increasing, longest_decreasing, reverse
 
 # Defines the Permutation class. Permutations are bijections of 1:n.
 immutable Permutation
@@ -222,5 +223,12 @@ end
 
 longest_increasing(p::Permutation) = longest_monotone(p,<)
 longest_decreasing(p::Permutation) = longest_monotone(p,>)
+
+
+function reverse(p::Permutation)
+    d = reverse(p.data)
+    return Permutation(d)
+end
+
 
 end # end of module Permutations
