@@ -113,7 +113,7 @@ julia> parity(p*p)
 
 If one thinks of a permutation as a sequence, then applying `reverse`
 to that permutation returns a new permutation based on the reversal of
-that sequnce. Here's an example:
+that sequence. Here's an example:
 ```julia
 julia> p = RandomPermutation(8)
 (1,5,8,4,6)(2,3)(7)
