@@ -63,7 +63,7 @@ function *(p::Permutation, q::Permutation)
     if n != length(q)
         error("Cannot compose Permutations of different lengths")
     end
-    dat = [ p[q[k]] for k in 1:n ]
+    @inbounds dat = [ p.data[q.data[k]] for k in 1:n ]
     return Permutation(dat)
 end
 
@@ -72,8 +72,8 @@ function inv(p::Permutation)
     n = length(p)
     data = zeros(Int,n)
     for k=1:n
-        j = p[k]
-        data[j] = k
+        @inbounds j = p.data[k]
+        @inbounds data[j] = k
     end
     return Permutation(data)
 end
