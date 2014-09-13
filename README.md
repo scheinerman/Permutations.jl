@@ -5,14 +5,14 @@ This is documentation for a `Permutation` data type for Julia. We only
 consider permutations of sets of the form `{1,2,3,...,n}` where `n` is
 a positive integer.
 
-A `Permutation` object is created from a one-dimensional arry of
+A `Permutation` object is created from a one-dimensional array of
 integers containing each of the values `1` through `n` exactly once.
 ```julia
 julia> a = [4,1,3,2,6,5];
 julia> p = Permutation(a)
 (1,4,2)(3)(5,6)
 ```
-Observe the `Permutation` is printed in disjoint cycle format.
+Observe that the `Permutation` is printed in disjoint cycle format.
 
 The number of elements in a `Permutation` is determined using the
 `length` function:
@@ -39,7 +39,7 @@ julia> two_row(p)
  4  1  3  2  6  5
 ```
 
-The evaulation of a `Permutation` on a particular element is performed
+The evaluation of a `Permutation` on a particular element is performed
 using square bracket notation:
 ```julia
 julia> p[2]
@@ -65,7 +65,7 @@ julia> q*p
 (1,3,2)(4,6)(5)
 ```
 Repeated composition is calculated using `^`, like this: `p^n`.
-The exponent can be negative.
+The exponent may be negative.
 
 The inverse of a `Permtuation` is computed using `inv`:
 ```julia
@@ -75,7 +75,7 @@ julia> p*q
 (1)(2)(3)(4)(5)(6)
 ```
 
-To get the cycle structure of a `Permutation` (not as a character string,
+To find the cycle structure of a `Permutation` (not as a character string,
 but as an array of arrays), use `cycles`:
 ```julia
 julia> cycles(p)
@@ -132,7 +132,7 @@ julia> two_row(reverse(p))
 
 Additional constructors
 -----------------------
-For convenience, identity and random permutations can be constructed
+For convenience, identity and random permutations may be constructed
 like this:
 ```julia
 julia> Permutation(10)
@@ -141,7 +141,7 @@ julia> RandomPermutation(10)
 (1,7,6,10,3,2,8,4)(5,9)
 ```
 
-In addition, we can use `Permutation(n,k)` to create the
+In addition, we may use `Permutation(n,k)` to create the
 `k`'th permutation of the set `{1,2,...,n}`. Of course,
 this requires `k` to be between `1` and `n!`.
 ```julia
