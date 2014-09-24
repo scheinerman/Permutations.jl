@@ -3,7 +3,9 @@
 
 module Permutations
 
-import Base.length, Base.show, Base.inv, Base.reverse
+import Base.length, Base.show, Base.inv, Base.reverse, Base.isequal
+import Base.hash, Base.isless
+
 
 export Permutation, RandomPermutation
 export length, getindex, array, two_row
@@ -23,6 +25,12 @@ immutable Permutation
     end
 end
 
+# To use Permutation objects as keys in dictionaries, etc, we need to
+# be able to hash them.
+function hash(P::Permutation, h::Uint64=zero(Uint64))
+    return hash(P.data,h)
+end
+
 # create the k'th permutation of 1:n
 function Permutation(n,k)
     return Permutation(nthperm([1:n],k))
@@ -40,6 +48,34 @@ end
 
 # Check for equality of permutations
 ==(p::Permutation, q::Permutation) = p.data==q.data
+isequal(p::Permutation, q::Permutation) = p==q
+
+# Define isless so we can sort lists of permutations
+function isless(p::Permutation, q::Permutation)
+    # first check no. of el'ts
+    np = length(p)
+    nq = length(q)
+    if np < nq
+        return true
+    end
+    if np > nq
+        return false
+    end
+
+    # now step through the data
+    for j=1:np
+        if p.data[j] < q.data[j]
+            return true
+        end
+        if p.data[j] > q.data[j]
+            return false
+        end
+    end
+    # if we reach this point, the permutations are equal so
+    return false
+end
+
+
 
 # Apply the Permutation to an element: p[k]
 function getindex(p::Permutation, k::Int)
@@ -77,6 +113,8 @@ function inv(p::Permutation)
     end
     return Permutation(data)
 end
+
+
 
 # Find the cycles in a permutation
 function cycles(p::Permutation)
@@ -185,7 +223,7 @@ end
 
 # find the fixed points of a Permutation
 fixed_points(p::Permutation) = find([ p[k]==k for k in 1:length(p)])
-    
+
 # Find a longest monotone subsequence of p in a given direction. This
 # is not exposed, but it is used by longest_increasing and
 # longest_increasing.
@@ -196,7 +234,7 @@ function longest_monotone(p::Permutation, order=<)
     end
     scores = ones(Int,n)
     scores[n] = 1
-    
+
     for k=n-1:-1:1
         for i=k+1:n
             if order(p[k],p[i]) && scores[k] <= scores[i]
@@ -204,7 +242,7 @@ function longest_monotone(p::Permutation, order=<)
             end
         end
     end
-    
+
     seq = Int[]
     mx = maximum(scores)
     a = findfirst([s == mx for s in scores])
