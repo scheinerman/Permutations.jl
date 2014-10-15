@@ -200,4 +200,4 @@ julia> longest_decreasing(p)
 Comparison
 ----------
 
-We define the functions `isequal` and `isless` and so permutations can be compared using the usual operators: `<`, `<=`, `==`, and so forth. In addition, we implement the `hash` function so permutations can serve as keys in dictionaries and held as elements of `Set` containers. 
+We define the functions `isequal` and `isless` and so permutations can be compared using the usual operators: `<`, `<=`, `==`, and so forth. In addition, we implement the `hash` function so permutations can serve as keys in dictionaries and be held as elements of `Set` containers. 
