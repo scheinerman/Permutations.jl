@@ -67,7 +67,7 @@ julia> q*p
 Repeated composition is calculated using `^`, like this: `p^n`.
 The exponent may be negative.
 
-The inverse of a `Permtuation` is computed using `inv`:
+The inverse of a `Permutation` is computed using `inv`:
 ```julia
 julia> q = inv(p)
 (1,2,4)(3)(5,6)
