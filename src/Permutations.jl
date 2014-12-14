@@ -18,9 +18,7 @@ immutable Permutation
     data::Array{Int,1}
     function Permutation(dat::Array{Int,1})
         n = length(dat)
-        if sort(dat) != [1:n]
-            error("Improper array: must be a permutation of 1:n")
-        end
+        isperm(dat) || error("Improper array: must be a permutation of 1:n")
         new(dat)
     end
 end
