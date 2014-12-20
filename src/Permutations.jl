@@ -6,7 +6,6 @@ module Permutations
 import Base.length, Base.show, Base.inv, Base.reverse, Base.isequal
 import Base.hash, Base.isless
 
-
 export Permutation, RandomPermutation
 export length, getindex, array, two_row
 export inv, cycles, cycle_string, parity
@@ -191,7 +190,7 @@ end
 # ptmp is workspace
 function permpower!{T<:Real}(p::AbstractVector{T},
                              pret::AbstractVector{T},
-                             ptmp::AbstractVector{T},                             
+                             ptmp::AbstractVector{T},                           
                              n::Integer)
     onep = one(T)
     lenp = convert(T,length(p))
@@ -208,8 +207,8 @@ end
 
 
 function ^(p::Permutation, n::Integer)
-    n == 0 && return [one(T):convert(T,length(p))]
-    n == 1 && return copy(p) # for consistency, don't return ref, rather copy
+    n == 0 && return Permutation(length(p))
+    n == 1 && return p
     pret = similar(p.data)
     ptmp = similar(p.data)
     permpower!(p.data,pret,ptmp,n)
