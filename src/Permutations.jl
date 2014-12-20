@@ -186,26 +186,34 @@ function order(p::Permutation)
     return result
 end
 
-# Extend p^n so negative exponents work too
-function ^(p::Permutation, n::Int)
-    if n==0
-        return Permutation(length(p))
+# p is the permutation vector
+# pret is the return vector
+# ptmp is workspace
+function permpower!{T<:Real}(p::AbstractVector{T},
+                             pret::AbstractVector{T},
+                             ptmp::AbstractVector{T},                             
+                             n::Integer)
+    onep = one(T)
+    lenp = convert(T,length(p))
+    n == 0 && (for i in onep:lenp pret[i] = i end; return )
+    n < 0  && (permpower!(invperm(p), pret, ptmp, -n); return )
+    n == 1 && (copy!(pret,p); return)
+    permpower!(p, ptmp, pret,int(floor(n/2)))
+    if iseven(n)
+        for i in onep:lenp pret[i] = ptmp[ptmp[i]] end
+    else
+        for i in onep:lenp pret[i] = p[ptmp[ptmp[i]]] end
     end
-    if n<0
-        return inv(p)^(-n)
-    end
-    if n==1
-        return p
-    end
+end
 
-    m::Int = int(floor(n/2))  # m = floor(n/2)
-    q::Permutation = p^m
 
-    if n%2 == 0   # if even
-        return q*q
-    end
-
-    return p*q*q
+function ^(p::Permutation, n::Integer)
+    n == 0 && return [one(T):convert(T,length(p))]
+    n == 1 && return copy(p) # for consistency, don't return ref, rather copy
+    pret = similar(p.data)
+    ptmp = similar(p.data)
+    permpower!(p.data,pret,ptmp,n)
+    return Permutation(pret)
 end
 
 # Represent as a permtuation matrix.
