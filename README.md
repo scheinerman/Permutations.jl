@@ -74,6 +74,7 @@ julia> q = inv(p)
 julia> p*q
 (1)(2)(3)(4)(5)(6)
 ```
+Note that `P'` may be used in place of `inv(P)`.
 
 To find the cycle structure of a `Permutation` (not as a character string,
 but as an array of arrays), use `cycles`:
