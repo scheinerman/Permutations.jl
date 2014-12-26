@@ -8,7 +8,7 @@ import Base.hash, Base.isless
 
 export Permutation, RandomPermutation
 export length, getindex, array, two_row
-export inv, cycles, cycle_string, parity
+export inv, ctranspose, cycles, cycle_string, parity
 export order, matrix, fixed_points
 export longest_increasing, longest_decreasing, reverse
 
@@ -111,6 +111,8 @@ function inv(p::Permutation)
     return Permutation(data)
 end
 
+# Faster way to type inv(p)
+ctranspose(p::Permutation) = inv(p)
 
 
 # Find the cycles in a permutation
