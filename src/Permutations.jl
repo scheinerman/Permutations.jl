@@ -30,11 +30,11 @@ end
 
 # create the k'th permutation of 1:n
 function Permutation(n,k)
-    return Permutation(nthperm([1:n],k))
+    return Permutation(nthperm(collect(1:n),k))
 end
 
 # create the identity permutation
-Permutation(n::Int) = Permutation([1:n])
+Permutation(n::Int) = Permutation(collect(1:n))
 
 RandomPermutation(n::Int) = Permutation(randperm(n))
 
@@ -199,7 +199,7 @@ function permpower!{T<:Real}(p::AbstractVector{T},
     n == 0 && (for i in onep:lenp pret[i] = i end; return )
     n < 0  && (permpower!(invperm(p), pret, ptmp, -n); return )
     n == 1 && (copy!(pret,p); return)
-    permpower!(p, ptmp, pret,int(floor(n/2)))
+    permpower!(p, ptmp, pret,floor(Int, n/2))
     if iseven(n)
         for i in onep:lenp pret[i] = ptmp[ptmp[i]] end
     else
@@ -223,7 +223,7 @@ function matrix(p::Permutation, sparse::Bool = false)
     if sparse
         A = speye(Int,n)
     else
-        A = int(eye(n))
+        A = eye(Int, n)
     end
     return A[array(p),:]
 end
