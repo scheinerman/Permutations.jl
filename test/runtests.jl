@@ -1,6 +1,6 @@
 using Base.Test
 using Permutations
-p = Permutation([7:-1:1])
+p = Permutation(collect(7:-1:1))
 i = Permutation(7)
 @test p*p == i
 @test p == inv(p)
