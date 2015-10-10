@@ -40,9 +40,11 @@ julia> two_row(p)
 ```
 
 The evaluation of a `Permutation` on a particular element is performed
-using square bracket notation:
+using square bracket or parenthesis notation:
 ```julia
 julia> p[2]
+1
+julia> p(2)
 1
 ```
 Of course, bad things happen if an inappropriate element is given:
