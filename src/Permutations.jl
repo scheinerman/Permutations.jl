@@ -5,11 +5,12 @@ module Permutations
 
 import Base.length, Base.show, Base.inv, Base.reverse
 import Base.==, Base.getindex, Base.*, Base.^, Base.parity
+import Base.isless, Base.<
 
 export Permutation, RandomPermutation
 export length, getindex, array, two_row
 export inv, cycles, cycle_string, parity
-export order, matrix, fixed_points
+export order, matrix, fixed_points, isless
 export longest_increasing, longest_decreasing, reverse
 
 # Defines the Permutation class. Permutations are bijections of 1:n.
@@ -235,6 +236,33 @@ function reverse(p::Permutation)
     d = reverse(p.data)
     return Permutation(d)
 end
+
+
+function isless(p::Permutation, q::Permutation)
+    np = length(p)
+    nq = length(q)
+    
+    if np < nq
+        return true
+    end
+
+    if np > nq
+        return false
+    end
+
+    for k=1:np
+        if p[k] < q[k]
+            return true
+        end
+        if p[k] > q[k]
+            return false
+        end
+    end
+    
+    return false
+end
+
+<(p::Permutation, q::Permutation) = isless(p,q)
 
 
 end # end of module Permutations

@@ -209,4 +209,22 @@ forth. In addition, we implement the `hash` function so permutations
 can serve as keys in dictionaries and be held as elements of `Set`
 containers.
 
-**Not yet implement!!** I still need to write the `isless` function!!
+Here is how `isless` orders permutations. First we compare the
+`length` of the two permutations. If one has fewer elements, it is
+considered the smaller of the two. Then, if they have the same number
+of elements, we compare their values element by element starting with
+their value at `1`, then `2`, and so on. At the first index `k` where
+they disagree we deem `p<q` if `p[k]<q[k]` (or vice versa). If the two
+permutations are equal, `isless` returns `false`. Here's an example:
+```julia
+julia> p = Permutation([5,4,2,3,1]);
+
+julia> q = Permutation([5,4,3,1,2]);
+
+julia> p<q
+true
+
+julia> q<p
+false
+```
+
