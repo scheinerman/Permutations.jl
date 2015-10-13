@@ -13,6 +13,15 @@ export order, matrix, fixed_points
 export longest_increasing, longest_decreasing, reverse, sign
 
 # Defines the Permutation class. Permutations are bijections of 1:n.
+
+"""
+* `Permutation(list)` creates a new `Permutation`. Here `list` must be a
+rearrangement of `1:n`.
+
+* `Permutation(n)` creates the identity `Permutation` of `1:n`.
+
+* `Permutation(n,k)` creates the `k`'th `Permutation` of `1:n`.
+"""
 immutable Permutation
     data::Array{Int,1}
     function Permutation(dat::Array{Int,1})
@@ -33,15 +42,15 @@ end
 Permutation(n::Int) = Permutation(collect(1:n))
 
 """
-For a positive integer n, RandomPermutation(n) creates
-a random permutation of 1:n, each with probability 1/n!.
+`RandomPermutation(n)` creates a random permutation of `1:n`,
+each with probability `1/factorial(n)`.
 """
 RandomPermutation(n::Int) = Permutation(randperm(n))
 
 # Returns the number of elements in the Permtuation
 
 """
-For a Permutation p, length(p) is the number of elements in p.
+`length(p)` is the number of elements in the `Permutation` `p`.
 """
 function length(p::Permutation)
     return length(p.data)
@@ -56,15 +65,18 @@ function getindex(p::Permutation, k::Int)
 end
 
 # Convert this Permutation into a one-dimensional array of integers
+"""
+`array(p::Permutation)` returns the list `[p(k) for k=1:n]`.
+"""
 function array(p::Permutation)
     return collect(p.data)
 end
 
 # Create a two-row representation of this permutation
 """
-For a Permutation p, two_row(p) creates a two-row representation
-of p in which the first row is 1:n and the second row are the
-values p(1), p(2), ..., p(n).
+`two_row(p)` creates a two-row representation of the `Permutation` `p`
+in which the first row is `1:n` and the second row are the
+values `p(1), p(2), ..., p(n)`.
 """
 function two_row(p::Permutation)
     n = length(p)
@@ -83,7 +95,7 @@ end
 
 # Inverse of a permutation
 """
-For a Permutation p, inv(p) gives the inverse permutation.
+`inv(p)` gives the inverse of `Permutation` `p`.
 """
 function inv(p::Permutation)
     n = length(p)
@@ -97,7 +109,7 @@ end
 
 # Find the cycles in a permutation
 """
-For a Permutation(p), cycles(p) returns a list of the cycles in p.
+`cycles(p)` returns a list of the cycles in `Permutation` `p`.
 """
 function cycles(p::Permutation)
     n = length(p)
@@ -149,8 +161,7 @@ function array2string(a::Array{Int,1})
 end
 
 """
-For a Permutation p, sign(p) is +1 is p is an even permtuation
-and -1 if p is odd.
+`sign(p)` is `+1` is `p` is an even `Permtuation` and `-1` if p is odd.
 """
 function sign(p::Permutation)
     cc = cycles(p)
@@ -167,8 +178,8 @@ end
 
 # Find the smallest positive n such that p^n is the identity
 """
-For a Permutation p, order(p) is the smallest positive integer n
-such that p^n is the identity.
+`order(p)` is the smallest positive integer `n`
+such that `p^n` is the identity `Permutation`.
 """
 function order(p::Permutation)
     result = 1
@@ -203,8 +214,7 @@ end
 
 # Represent as a permtuation matrix.
 """
-For a Permutation p, matrix(p) returns the corresponding
-permutation matrix.
+`matrix(p)` returns the permutation matrix for the `Permutation` `p`.
 """
 function matrix(p::Permutation, sparse::Bool = false)
     n = length(p)
@@ -218,8 +228,7 @@ end
 
 # find the fixed points of a Permutation
 """
-For a Permutation p, fixed_points(p) returns the list of values
-k for which p(k)==k.
+`fixed_points(p)` returns the list of values `k` for which `p(k)==k`.
 """
 fixed_points(p::Permutation) = find([ p[k]==k for k in 1:length(p)])
 
@@ -259,22 +268,22 @@ function longest_monotone(p::Permutation, order=<)
 end
 
 """
-Let p be a Permutation. Thinking of this as a list of values,
-longest_increasing(p) returns a longest subsequence of values
+Let `p` be a `Permutation`. Thinking of this as a list of values,
+`longest_increasing(p)` returns a longest subsequence of values
 that are in ascending order
 """
 longest_increasing(p::Permutation) = longest_monotone(p,<)
 
 """
-Let p be a Permutation. Thinking of this as a list of values,
-longest_decreasing(p) returns a longest subsequence of values
+Let `p` be a `Permutation`. Thinking of this as a list of values,
+`longest_decreasing(p)` returns a longest subsequence of values
 that are in descending order
 """
 longest_decreasing(p::Permutation) = longest_monotone(p,>)
 
 """
-Let p be a Permutation. Thinking of p as a list of values,
-reverse(p) creates a permutation with those values in reverse
+Let `p` be a `Permutation`. Thinking of `p` as a list of values,
+`reverse(p)` creates a `Permutation` with those values in reverse
 sequence.
 """
 function reverse(p::Permutation)
