@@ -32,9 +32,17 @@ end
 # create the identity permutation
 Permutation(n::Int) = Permutation(collect(1:n))
 
+"""
+For a positive integer n, RandomPermutation(n) creates
+a random permutation of 1:n, each with probability 1/n!.
+"""
 RandomPermutation(n::Int) = Permutation(randperm(n))
 
 # Returns the number of elements in the Permtuation
+
+"""
+For a Permutation p, length(p) is the number of elements in p.
+"""
 function length(p::Permutation)
     return length(p.data)
 end
@@ -53,6 +61,11 @@ function array(p::Permutation)
 end
 
 # Create a two-row representation of this permutation
+"""
+For a Permutation p, two_row(p) creates a two-row representation
+of p in which the first row is 1:n and the second row are the
+values p(1), p(2), ..., p(n).
+"""
 function two_row(p::Permutation)
     n = length(p)
     return [ (1:n)'; p.data']
@@ -69,6 +82,9 @@ function *(p::Permutation, q::Permutation)
 end
 
 # Inverse of a permutation
+"""
+For a Permutation p, inv(p) gives the inverse permutation.
+"""
 function inv(p::Permutation)
     n = length(p)
     data = zeros(Int,n)
@@ -80,6 +96,9 @@ function inv(p::Permutation)
 end
 
 # Find the cycles in a permutation
+"""
+For a Permutation(p), cycles(p) returns a list of the cycles in p.
+"""
 function cycles(p::Permutation)
     n = length(p)
     result = Array{Int,1}[]
@@ -129,15 +148,10 @@ function array2string(a::Array{Int,1})
     return res
 end
 
-
-# HAD TO REMOVE THIS BECAUSE OF CONFLICT WITH Base.parity
-## # Determine the parity of this permutation (0=even, 1=odd)
-## function parity(p::Permutation)
-##     cc = cycles(p)
-##     szs = [ length(c)+1 for c in cc ]
-##     return sum(szs)%2
-## end
-
+"""
+For a Permutation p, sign(p) is +1 is p is an even permtuation
+and -1 if p is odd.
+"""
 function sign(p::Permutation)
     cc = cycles(p)
     szs = [ length(c)+1 for c in cc ]
@@ -152,6 +166,10 @@ function show(io::IO, p::Permutation)
 end
 
 # Find the smallest positive n such that p^n is the identity
+"""
+The order of a permutation p is the smallest positive integer n
+such that p^n is the identity
+"""
 function order(p::Permutation)
     result = 1
     clist = cycles(p)
@@ -184,6 +202,10 @@ function ^(p::Permutation, n::Int)
 end
 
 # Represent as a permtuation matrix.
+"""
+For a Permutation p, matrix(p) returns the corresponding
+permutation matrix.
+"""
 function matrix(p::Permutation, sparse::Bool = false)
     n = length(p)
     if sparse
@@ -195,6 +217,10 @@ function matrix(p::Permutation, sparse::Bool = false)
 end
 
 # find the fixed points of a Permutation
+"""
+For a Permutation p, fixed_points(p) returns the list of values
+k for which p(k)==k.
+"""
 fixed_points(p::Permutation) = find([ p[k]==k for k in 1:length(p)])
 
 # Find a longest monotone subsequence of p in a given direction. This
@@ -232,10 +258,25 @@ function longest_monotone(p::Permutation, order=<)
 
 end
 
+"""
+Let p be a Permutation. Thinking of this as a list of values,
+longest_increasing(p) returns a longest subsequence of values
+that are in ascending order
+"""
 longest_increasing(p::Permutation) = longest_monotone(p,<)
+
+"""
+Let p be a Permutation. Thinking of this as a list of values,
+longest_decreasing(p) returns a longest subsequence of values
+that are in descending order
+"""
 longest_decreasing(p::Permutation) = longest_monotone(p,>)
 
-
+"""
+Let p be a Permutation. Thinking of p as a list of values,
+reverse(p) creates a permutation with those values in reverse
+sequence.
+"""
 function reverse(p::Permutation)
     d = reverse(p.data)
     return Permutation(d)
