@@ -6,8 +6,6 @@ module Permutations
 import Base.length, Base.show, Base.inv, Base.reverse
 import Base.==, Base.getindex, Base.*, Base.^, Base.sign
 
-
-
 export Permutation, RandomPermutation
 export length, getindex, array, two_row
 export inv, cycles, cycle_string
@@ -175,7 +173,7 @@ function ^(p::Permutation, n::Int)
         return p
     end
 
-    m::Int = int(floor(n/2))  # m = floor(n/2)
+    m::Int = round(Int,floor(n/2)) # int(floor(n/2))  # m = floor(n/2)
     q::Permutation = p^m
 
     if n%2 == 0   # if even
