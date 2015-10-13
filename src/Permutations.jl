@@ -191,7 +191,7 @@ function matrix(p::Permutation, sparse::Bool = false)
     if sparse
         A = speye(Int,n)
     else
-        A = int(eye(n))
+        A = eye(Int,n)   #  int(eye(n))
     end
     return A[array(p),:]
 end
