@@ -167,8 +167,8 @@ end
 
 # Find the smallest positive n such that p^n is the identity
 """
-The order of a permutation p is the smallest positive integer n
-such that p^n is the identity
+For a Permutation p, order(p) is the smallest positive integer n
+such that p^n is the identity.
 """
 function order(p::Permutation)
     result = 1
