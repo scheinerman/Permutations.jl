@@ -57,7 +57,7 @@ end
 # Create a two-row representation of this permutation
 function two_row(p::Permutation)
     n = length(p)
-    return [ (1:n)', p.data']
+    return [ (1:n)'; p.data']
 end
 
 # Composition of two permutations
