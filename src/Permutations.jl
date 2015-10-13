@@ -4,14 +4,15 @@
 module Permutations
 
 import Base.length, Base.show, Base.inv, Base.reverse
-import Base.==, Base.getindex, Base.*, Base.^, Base.parity
-import Base.isless, Base.<
+import Base.==, Base.getindex, Base.*, Base.^, Base.sign
+
+
 
 export Permutation, RandomPermutation
 export length, getindex, array, two_row
-export inv, cycles, cycle_string, parity
-export order, matrix, fixed_points, isless
-export longest_increasing, longest_decreasing, reverse
+export inv, cycles, cycle_string
+export order, matrix, fixed_points
+export longest_increasing, longest_decreasing, reverse, sign
 
 # Defines the Permutation class. Permutations are bijections of 1:n.
 immutable Permutation
@@ -48,11 +49,6 @@ function getindex(p::Permutation, k::Int)
     return p.data[k]
 end
 
-# New symantics p(k)
-function call(p::Permutation, k::Int)
-    return p.data[k]
-end
-
 # Convert this Permutation into a one-dimensional array of integers
 function array(p::Permutation)
     return collect(p.data)
@@ -61,7 +57,7 @@ end
 # Create a two-row representation of this permutation
 function two_row(p::Permutation)
     n = length(p)
-    return [ collect(1:n)'; p.data']
+    return [ (1:n)', p.data']
 end
 
 # Composition of two permutations
@@ -135,12 +131,22 @@ function array2string(a::Array{Int,1})
     return res
 end
 
-# Determine the parity of this permutation (0=even, 1=odd)
-function parity(p::Permutation)
+
+# HAD TO REMOVE THIS BECAUSE OF CONFLICT WITH Base.parity
+## # Determine the parity of this permutation (0=even, 1=odd)
+## function parity(p::Permutation)
+##     cc = cycles(p)
+##     szs = [ length(c)+1 for c in cc ]
+##     return sum(szs)%2
+## end
+
+function sign(p::Permutation)
     cc = cycles(p)
     szs = [ length(c)+1 for c in cc ]
-    return sum(szs)%2
+    par = sum(szs)%2
+    return (par>0) ? -1 : 1
 end
+
 
 # When we print a permutation, it appears in disjoint cycle format.
 function show(io::IO, p::Permutation)
@@ -169,7 +175,7 @@ function ^(p::Permutation, n::Int)
         return p
     end
 
-    m::Int = round(Int,floor(n/2))  # m = floor(n/2)
+    m::Int = int(floor(n/2))  # m = floor(n/2)
     q::Permutation = p^m
 
     if n%2 == 0   # if even
@@ -185,14 +191,14 @@ function matrix(p::Permutation, sparse::Bool = false)
     if sparse
         A = speye(Int,n)
     else
-        A = eye(Int,n)
+        A = int(eye(n))
     end
     return A[array(p),:]
 end
 
 # find the fixed points of a Permutation
 fixed_points(p::Permutation) = find([ p[k]==k for k in 1:length(p)])
-    
+
 # Find a longest monotone subsequence of p in a given direction. This
 # is not exposed, but it is used by longest_increasing and
 # longest_increasing.
@@ -203,7 +209,7 @@ function longest_monotone(p::Permutation, order=<)
     end
     scores = ones(Int,n)
     scores[n] = 1
-    
+
     for k=n-1:-1:1
         for i=k+1:n
             if order(p[k],p[i]) && scores[k] <= scores[i]
@@ -211,7 +217,7 @@ function longest_monotone(p::Permutation, order=<)
             end
         end
     end
-    
+
     seq = Int[]
     mx = maximum(scores)
     a = findfirst([s == mx for s in scores])
@@ -236,33 +242,6 @@ function reverse(p::Permutation)
     d = reverse(p.data)
     return Permutation(d)
 end
-
-
-function isless(p::Permutation, q::Permutation)
-    np = length(p)
-    nq = length(q)
-    
-    if np < nq
-        return true
-    end
-
-    if np > nq
-        return false
-    end
-
-    for k=1:np
-        if p[k] < q[k]
-            return true
-        end
-        if p[k] > q[k]
-            return false
-        end
-    end
-    
-    return false
-end
-
-<(p::Permutation, q::Permutation) = isless(p,q)
 
 
 end # end of module Permutations
