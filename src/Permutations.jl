@@ -5,12 +5,14 @@ module Permutations
 
 import Base.length, Base.show, Base.inv, Base.reverse
 import Base.==, Base.getindex, Base.*, Base.^, Base.sign
+import Base.hash
 
 export Permutation, RandomPermutation
 export length, getindex, array, two_row
 export inv, cycles, cycle_string
 export order, matrix, fixed_points
 export longest_increasing, longest_decreasing, reverse, sign
+export hash
 
 # Defines the Permutation class. Permutations are bijections of 1:n.
 
@@ -291,5 +293,7 @@ function reverse(p::Permutation)
     return Permutation(d)
 end
 
+# hash function so Permutations can be keys in dictionaries, etc.
+hash(p::Permutation, h::UInt64) = hash(p.data,h)
 
 end # end of module Permutations
