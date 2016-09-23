@@ -5,7 +5,7 @@ module Permutations
 
 import Base.length, Base.show, Base.inv, Base.reverse
 import Base.==, Base.getindex, Base.*, Base.^, Base.sign
-import Base.hash
+import Base.hash, Base.getindex
 
 export Permutation, RandomPermutation
 export length, getindex, array, two_row
