@@ -1,6 +1,6 @@
 using Base.Test
 using Permutations
-p = Permutation([7:-1:1])
+p = Permutation(collect(7:-1:1))
 i = Permutation(7)
 @test p*p == i
 @test p == inv(p)
@@ -11,7 +11,7 @@ p = Permutation(a)
 @test p^-5 == p
 @test array(p)==a
 
-q = Permutation([1,5,3,9,4,8,6,7,2] )
+q = Permutation([1,5,3,9,4,8,6,7,2])
 @test p*q != q*p
 @test q[2] == 5
 
