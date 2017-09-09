@@ -1,6 +1,15 @@
 Permutations
 ============
 
+
+[![Build Status](https://travis-ci.org/scheinerman/Permutations.jl.svg?branch=master)](https://travis-ci.org/scheinerman/Permutations.jl)
+
+[![Coverage Status](https://coveralls.io/repos/scheinerman/Permutations.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/scheinerman/Permutations.jl?branch=master)
+
+[![codecov.io](http://codecov.io/github/scheinerman/Permutations.jl/coverage.svg?branch=master)](http://codecov.io/github/scheinerman/Permutations.jl?branch=master)
+
+
+
 This is documentation for a `Permutation` data type for Julia. We only
 consider permutations of sets of the form `{1,2,3,...,n}` where `n` is
 a positive integer.
