@@ -19,3 +19,22 @@ P = matrix(p)
 Q = matrix(q)
 @test P*Q == matrix(q*p)
 @test P' == matrix(inv(p))
+
+row = [1,3,5,2,4,6]
+p = Permutation(row)
+@test length(p) == 6
+@test p[1] == 1
+@test length(longest_increasing(p)) == 4
+@test length(longest_decreasing(p)) == 2
+@test length(fixed_points(p)) == 2
+@test sign(p) == -1
+@test hash(p) == hash(p.data)
+
+M = two_row(p)
+@test M[2,:] == row
+
+@test Permutation(6,1) == Permutation(6)
+
+p = RandomPermutation(10)
+@test p*inv(p) == Permutation(10)
+@test reverse(reverse(p)) == p
