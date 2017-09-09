@@ -18,11 +18,8 @@ export hash
 # Defines the Permutation class. Permutations are bijections of 1:n.
 
 """
-* `Permutation(list)` creates a new `Permutation`. Here `list` must be a
-rearrangement of `1:n`.
-
+* `Permutation(list)` creates a new `Permutation`. Here `list` must be a rearrangement of `1:n`.
 * `Permutation(n)` creates the identity `Permutation` of `1:n`.
-
 * `Permutation(n,k)` creates the `k`'th `Permutation` of `1:n`.
 """
 immutable Permutation
@@ -133,8 +130,10 @@ function cycles(p::Permutation)
     return result
 end
 
-# Create a nice, printable string representation from the cycle
-# structure of a permutation
+"""
+`cycle_string(p)` creates a nice, prinatble string representation
+from the cycle structure of the permutation `p`.
+"""
 function cycle_string(p::Permutation)
     if length(p)==0
         return "()"
