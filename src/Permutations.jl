@@ -22,7 +22,7 @@ export hash
 * `Permutation(n)` creates the identity `Permutation` of `1:n`.
 * `Permutation(n,k)` creates the `k`'th `Permutation` of `1:n`.
 """
-immutable Permutation
+struct Permutation
     data::Array{Int,1}
     function Permutation(dat::Array{Int,1})
         n = length(dat)
