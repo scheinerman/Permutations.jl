@@ -296,4 +296,29 @@ end
 # hash function so Permutations can be keys in dictionaries, etc.
 hash(p::Permutation, h::UInt64) = hash(p.data,h)
 
+
+#####
+# Decomposing into Coxeter generators
+#####
+
+coxetergenerator(n, i) = Permutation([1:i-1; i+1; i; i+2:n])
+
+decompose(P::Permutation) = decompose!(Permutation(copy(P.data)))
+function _decompose!(P::Permutation)
+    n = length(P)
+    data = P.data
+    ret = Int[]
+    while !issorted(data)
+        for k=1:n-1
+            if data[k] > data[k+1]
+                data[k], data[k+1] =  data[k+1], data[k]
+                push!(ret, k)
+            end
+        end
+    end
+    reverse!(ret)
+end
+
+decompose!(P::Permutation) = coxetergenerator.(length(P), _decompose!(P))
+
 end # end of module Permutations
