@@ -53,6 +53,16 @@ end
     @test s₂*c isa CoxeterDecomposition
     @test c*s₂ isa CoxeterDecomposition
     @test s₂*s₂ isa CoxeterDecomposition
-    @test s₂*c == CoxeterDecomposition([s₂])*c
-    @test Permutation(s₂*c) == Permutation(CoxeterDecomposition([s₂])*c) == Permutation(s₂)*p
+    @test s₂*c == CoxeterDecomposition(s₂)*c
+    @test Permutation(s₂*c) == Permutation(CoxeterDecomposition(s₂)*c) == Permutation(s₂)*p
+
+    @test inv(c)*c == CoxeterDecomposition(n, Int[])
+
+    @test CoxeterDecomposition(5, [3,4,1]) == CoxeterDecomposition(5, [1,3,4])
+    @test CoxeterDecomposition(5, [2,1,3,4,1]) == CoxeterDecomposition(5, [2,3,4])
+    @test CoxeterDecomposition(5, [1,3,4,3,4,3,4,1]) == CoxeterDecomposition(5, Int[])
+
+    @test Permutation(CoxeterDecomposition(5, Int[])).data ≈ 1:5
+    @test Permutation(CoxeterDecomposition(5, [1])).data == [2; 1; 3:5]
+    @test inv(CoxeterDecomposition(6, [1,3,5])) == CoxeterDecomposition(6, [1,3,5])
 end

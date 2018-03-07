@@ -84,6 +84,7 @@ function two_row(p::Permutation)
 end
 
 # Composition of two permutations
+*(p::Permutation) = p
 function *(p::Permutation, q::Permutation)
     n = length(p)
     if n != length(q)
@@ -328,6 +329,10 @@ hash(p::Permutation, h::UInt64) = hash(p.data,h)
 struct CoxeterGenerator <: AbstractPermutation
     n::Int
     i::Int
+    function CoxeterGenerator(n::Int, i::Int)
+        1 ≤ i ≤ n-1 || throw(ArgumentError("$i must be between 1 and $n-1"))
+        new(n, i)
+    end
 end
 
 length(sᵢ::CoxeterGenerator) = sᵢ.n
@@ -337,13 +342,57 @@ function show(io::IO, p::CoxeterGenerator)
     print(io, "length $(p.n) permutation: s_$(p.i)")
 end
 
-struct CoxeterDecomposition <: AbstractPermutation
-    terms::Vector{CoxeterGenerator} # TODO: How do you make sure this decomposition is unique?
+
+# _coxeter_reduce reduces a product of simple transpositions using the relationships
+# https://en.wikipedia.org/wiki/Symmetric_group#Generators_and_relations
+# combined with a sorting for uniqueness
+function _coxeter_reduce!(terms::Vector{Int})
+    for i = 1:length(terms)-1
+        # sᵢ^2 = I
+        if terms[i] == terms[i+1]
+            return _coxeter_reduce!(deleteat!(terms, i:i+1))
+        end
+        # sort using s_is_j = s_js_i
+        if terms[i+1] ≠ terms[i]-1 && terms[i+1] ≠ terms[i]+1 && terms[i] > terms[i+1]
+            terms[i], terms[i+1] = terms[i+1], terms[i]
+            return _coxeter_reduce!(terms)
+        end
+    end
+    # (s_is_{i+1})^3 = I
+    for i = 1:length(terms)-5
+        if terms[i]+1 == terms[i+1] == terms[i+2]+1 == terms[i+3] == terms[i+4]+1 == terms[i+5]
+            return _coxeter_reduce!(deleteat!(terms, i:i+5))
+        end
+    end
+
+    terms
 end
 
-Permutation(P::CoxeterDecomposition) = *(Permutation.(P.terms)...)
+struct CoxeterDecomposition <: AbstractPermutation
+    n::Int
+    terms::Vector{Int}
+    function CoxeterDecomposition(n::Int, terms::Vector{Int})
+        for t in terms
+            1 ≤ t ≤ n-1 || throw(ArgumentError("$t must be between 1 and $n-1"))
+        end
+        new(n, _coxeter_reduce!(terms))
+    end
+end
+
+CoxeterDecomposition(n::Int, terms::AbstractVector) = CoxeterDecomposition(n, Vector{Int}(terms))
+CoxeterDecomposition(sᵢ::CoxeterGenerator) = CoxeterDecomposition(sᵢ.n, [sᵢ.i])
+
+length(P::CoxeterDecomposition) = P.n
+
+function Permutation(P::CoxeterDecomposition)
+    if isempty(P.terms)
+        Permutation(1:P.n)
+    else
+        *(Permutation.(CoxeterGenerator.(P.n,P.terms))...)
+    end
+end
 CoxeterDecomposition(P::Permutation) = CoxeterDecomposition!(Permutation(copy(P.data)))
-CoxeterDecomposition!(P::Permutation) = CoxeterDecomposition(CoxeterGenerator.(length(P), _coxeterdecomposition!(P)))
+CoxeterDecomposition!(P::Permutation) = CoxeterDecomposition(length(P), _coxeterdecomposition!(P))
 function _coxeterdecomposition!(P::Permutation)
     n = length(P)
     data = P.data
@@ -361,18 +410,34 @@ end
 
 ==(A::CoxeterDecomposition, B::CoxeterDecomposition) = A.terms == B.terms
 
-*(A::CoxeterGenerator, B::CoxeterGenerator) = CoxeterDecomposition([A,B])
-*(A::CoxeterGenerator, B::CoxeterDecomposition) = CoxeterDecomposition([A; B.terms])
-*(A::CoxeterDecomposition, B::CoxeterGenerator) = CoxeterDecomposition([A.terms; B])
-*(A::CoxeterDecomposition, B::CoxeterDecomposition) = CoxeterDecomposition([A.terms; B.terms])
+function *(A::CoxeterGenerator, B::CoxeterGenerator)
+    length(A) == length(B) || throw(ArgumentError("Permutations must have same length to multiply"))
+    CoxeterDecomposition(length(A), [A.i,B.i])
+end
+function *(A::CoxeterGenerator, B::CoxeterDecomposition)
+    length(A) == length(B) || throw(ArgumentError("Permutations must have same length to multiply"))
+    CoxeterDecomposition(length(A), [A.i; B.terms])
+end
+function *(A::CoxeterDecomposition, B::CoxeterGenerator)
+    length(A) == length(B) || throw(ArgumentError("Permutations must have same length to multiply"))
+    CoxeterDecomposition(length(A), [A.terms; B.i])
+end
+function *(A::CoxeterDecomposition, B::CoxeterDecomposition)
+    length(A) == length(B) || throw(ArgumentError("Permutations must have same length to multiply"))
+    CoxeterDecomposition(length(A), [A.terms; B.terms])
+end
+
+inv(A::CoxeterDecomposition) = CoxeterDecomposition(A.n, reverse(A.terms))
 
 function show(io::IO, p::CoxeterDecomposition)
-    print(io, "length $(first(p.terms).n) permutation: ")
-    for s in p.terms
-        print(io, "s_$(s.i)")
+    print(io, "length $(length(p)) permutation: ")
+    for i in p.terms
+        print(io, "s_$(i)")
     end
 end
 
+
+# deprecations
 @deprecate array(p::Permutation) p.data
 @deprecate matrix(p::Permutation, sparse::Bool = false) sparse ? sparse(p) : Matrix(p)
 
