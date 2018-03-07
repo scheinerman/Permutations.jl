@@ -3,10 +3,11 @@
 
 module Permutations
 
-import Base.length, Base.show, Base.inv, Base.reverse
-import Base.==, Base.getindex, Base.*, Base.^, Base.sign
-import Base.hash, Base.getindex
-import Combinatorics.nthperm
+import Base: length, show, inv, reverse, ==, getindex, *, ^, sign, hash, getindex,
+                Matrix, Array, AbstractMatrix, AbstractArray, Array,
+                SparseMatrixCSC, AbstractSparseMatrix, AbstractSparseArray, sparse
+
+import Combinatorics: nthperm
 
 export Permutation, RandomPermutation
 export length, getindex, array, two_row
@@ -14,17 +15,21 @@ export inv, cycles, cycle_string
 export order, matrix, fixed_points
 export longest_increasing, longest_decreasing, reverse, sign
 export hash
+export CoxeterGenerator, CoxeterDecomposition
 
 # Defines the Permutation class. Permutations are bijections of 1:n.
+
+
+abstract type AbstractPermutation end
 
 """
 * `Permutation(list)` creates a new `Permutation`. Here `list` must be a rearrangement of `1:n`.
 * `Permutation(n)` creates the identity `Permutation` of `1:n`.
 * `Permutation(n,k)` creates the `k`'th `Permutation` of `1:n`.
 """
-struct Permutation
-    data::Array{Int,1}
-    function Permutation(dat::Array{Int,1})
+struct Permutation <: AbstractPermutation
+    data::Vector{Int}
+    function Permutation(dat::Vector{Int})
         n = length(dat)
         if sort(dat) != collect(1:n)
             error("Improper array: must be a permutation of 1:n")
@@ -32,6 +37,8 @@ struct Permutation
         new(dat)
     end
 end
+
+Permutation(v::AbstractVector) = Permutation(Vector{Int}(v))
 
 # create the k'th permutation of 1:n
 function Permutation(n,k)
@@ -64,13 +71,6 @@ function getindex(p::Permutation, k::Int)
     return p.data[k]
 end
 
-# Convert this Permutation into a one-dimensional array of integers
-"""
-`array(p::Permutation)` returns the list `[p(k) for k=1:n]`.
-"""
-function array(p::Permutation)
-    return collect(p.data)
-end
 
 # Create a two-row representation of this permutation
 """
@@ -84,6 +84,7 @@ function two_row(p::Permutation)
 end
 
 # Composition of two permutations
+*(p::Permutation) = p
 function *(p::Permutation, q::Permutation)
     n = length(p)
     if n != length(q)
@@ -216,17 +217,41 @@ end
 
 # Represent as a permtuation matrix.
 """
-`matrix(p)` returns the permutation matrix for the `Permutation` `p`.
+`Matrix(p)` returns the permutation matrix for the `Permutation` `p`.
 """
-function matrix(p::Permutation, sparse::Bool = false)
+function Matrix{T}(p::Permutation) where T
     n = length(p)
-    if sparse
-        A = speye(Int,n)
-    else
-        A = eye(Int,n)   #  int(eye(n))
-    end
-    return A[array(p),:]
+    A = eye(T,n)   #  int(eye(n))
+    return A[p.data,:]
 end
+
+Matrix(p::Permutation) = Matrix{Int}(p)
+Array(p::Permutation) = Matrix(p)
+AbstractMatrix(p::Permutation) = Matrix(p)
+AbstractArray(p::Permutation) = Matrix(p)
+
+Array{T}(p::Permutation) where T = Matrix{T}(p)
+AbstractMatrix{T}(p::Permutation) where T = Matrix{T}(p)
+AbstractArray{T}(p::Permutation) where T = Matrix{T}(p)
+
+
+"""
+`SparseMatrixCSC(p)` returns the permutation matrix for the `Permutation` `p`.
+"""
+function SparseMatrixCSC{T}(p::Permutation) where T
+    n = length(p)
+    A = speye(T,n)   #  int(eye(n))
+    return A[p.data,:]
+end
+
+SparseMatrixCSC(p::Permutation) = SparseMatrixCSC{Int}(p)
+AbstractSparseMatrix(p::Permutation) = SparseMatrixCSC{Int}(p)
+AbstractSparseArray(p::Permutation) = SparseMatrixCSC{Int}(p)
+AbstractSparseMatrix{T}(p::Permutation) where T = SparseMatrixCSC{T}(p)
+AbstractSparseArray{T}(p::Permutation) where T = SparseMatrixCSC{T}(p)
+
+sparse(p::Permutation) = SparseMatrixCSC(p)
+
 
 # find the fixed points of a Permutation
 """
@@ -295,5 +320,126 @@ end
 
 # hash function so Permutations can be keys in dictionaries, etc.
 hash(p::Permutation, h::UInt64) = hash(p.data,h)
+
+
+#####
+# Decomposing into Coxeter generators
+#####
+
+struct CoxeterGenerator <: AbstractPermutation
+    n::Int
+    i::Int
+    function CoxeterGenerator(n::Int, i::Int)
+        1 ≤ i ≤ n-1 || throw(ArgumentError("$i must be between 1 and $n-1"))
+        new(n, i)
+    end
+end
+
+length(sᵢ::CoxeterGenerator) = sᵢ.n
+Permutation(P::CoxeterGenerator) = Permutation([1:P.i-1; P.i+1; P.i; P.i+2:P.n])
+
+function show(io::IO, p::CoxeterGenerator)
+    print(io, "length $(p.n) permutation: s_$(p.i)")
+end
+
+
+# _coxeter_reduce reduces a product of simple transpositions using the relationships
+# https://en.wikipedia.org/wiki/Symmetric_group#Generators_and_relations
+# combined with a sorting for uniqueness
+function _coxeter_reduce!(terms::Vector{Int})
+    for i = 1:length(terms)-1
+        # sᵢ^2 = I
+        if terms[i] == terms[i+1]
+            return _coxeter_reduce!(deleteat!(terms, i:i+1))
+        end
+        # sort using s_is_j = s_js_i
+        if terms[i+1] ≠ terms[i]-1 && terms[i+1] ≠ terms[i]+1 && terms[i] > terms[i+1]
+            terms[i], terms[i+1] = terms[i+1], terms[i]
+            return _coxeter_reduce!(terms)
+        end
+    end
+    # (s_is_{i+1})^3 = I
+    for i = 1:length(terms)-5
+        if terms[i]+1 == terms[i+1] == terms[i+2]+1 == terms[i+3] == terms[i+4]+1 == terms[i+5]
+            return _coxeter_reduce!(deleteat!(terms, i:i+5))
+        end
+    end
+
+    terms
+end
+
+struct CoxeterDecomposition <: AbstractPermutation
+    n::Int
+    terms::Vector{Int}
+    function CoxeterDecomposition(n::Int, terms::Vector{Int})
+        for t in terms
+            1 ≤ t ≤ n-1 || throw(ArgumentError("$t must be between 1 and $n-1"))
+        end
+        new(n, _coxeter_reduce!(terms))
+    end
+end
+
+CoxeterDecomposition(n::Int, terms::AbstractVector) = CoxeterDecomposition(n, Vector{Int}(terms))
+CoxeterDecomposition(sᵢ::CoxeterGenerator) = CoxeterDecomposition(sᵢ.n, [sᵢ.i])
+
+length(P::CoxeterDecomposition) = P.n
+
+function Permutation(P::CoxeterDecomposition)
+    if isempty(P.terms)
+        Permutation(1:P.n)
+    else
+        *(Permutation.(CoxeterGenerator.(P.n,P.terms))...)
+    end
+end
+CoxeterDecomposition(P::Permutation) = CoxeterDecomposition!(Permutation(copy(P.data)))
+CoxeterDecomposition!(P::Permutation) = CoxeterDecomposition(length(P), _coxeterdecomposition!(P))
+function _coxeterdecomposition!(P::Permutation)
+    n = length(P)
+    data = P.data
+    ret = Int[]
+    while !issorted(data)
+        for k=1:n-1
+            if data[k] > data[k+1]
+                data[k], data[k+1] =  data[k+1], data[k]
+                push!(ret, k)
+            end
+        end
+    end
+    reverse!(ret)
+end
+
+==(A::CoxeterDecomposition, B::CoxeterDecomposition) = A.terms == B.terms
+
+function *(A::CoxeterGenerator, B::CoxeterGenerator)
+    length(A) == length(B) || throw(ArgumentError("Permutations must have same length to multiply"))
+    CoxeterDecomposition(length(A), [A.i,B.i])
+end
+function *(A::CoxeterGenerator, B::CoxeterDecomposition)
+    length(A) == length(B) || throw(ArgumentError("Permutations must have same length to multiply"))
+    CoxeterDecomposition(length(A), [A.i; B.terms])
+end
+function *(A::CoxeterDecomposition, B::CoxeterGenerator)
+    length(A) == length(B) || throw(ArgumentError("Permutations must have same length to multiply"))
+    CoxeterDecomposition(length(A), [A.terms; B.i])
+end
+function *(A::CoxeterDecomposition, B::CoxeterDecomposition)
+    length(A) == length(B) || throw(ArgumentError("Permutations must have same length to multiply"))
+    CoxeterDecomposition(length(A), [A.terms; B.terms])
+end
+
+inv(A::CoxeterDecomposition) = CoxeterDecomposition(A.n, reverse(A.terms))
+
+function show(io::IO, p::CoxeterDecomposition)
+    print(io, "length $(length(p)) permutation: ")
+    for i in p.terms
+        print(io, "s_$(i)")
+    end
+end
+
+
+# deprecations
+@deprecate array(p::Permutation) p.data
+@deprecate matrix(p::Permutation, sparse::Bool = false) sparse ? sparse(p) : Matrix(p)
+
 
 end # end of module Permutations
