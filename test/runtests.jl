@@ -47,14 +47,14 @@ end
     p = RandomPermutation(n)
     c = CoxeterDecomposition(p)
     @test p == Permutation(c)
-    s₂ = CoxeterGenerator(n, 2)
-    @test Permutation(s₂) == Permutation([1; 3; 2; 4:n])
 
-    @test s₂*c isa CoxeterDecomposition
-    @test c*s₂ isa CoxeterDecomposition
-    @test s₂*s₂ isa CoxeterDecomposition
-    @test s₂*c == CoxeterDecomposition(s₂)*c
-    @test Permutation(s₂*c) == Permutation(CoxeterDecomposition(s₂)*c) == Permutation(s₂)*p
+    #s₂ = CoxeterGenerator(n, 2)
+    #@test Permutation(s₂) == Permutation([1; 3; 2; 4:n])
+    #@test s₂*c isa CoxeterDecomposition
+    #@test c*s₂ isa CoxeterDecomposition
+    #@test s₂*s₂ isa CoxeterDecomposition
+    #@test s₂*c == CoxeterDecomposition(s₂)*c
+    #@test Permutation(s₂*c) == Permutation(CoxeterDecomposition(s₂)*c) == Permutation(s₂)*p
 
     @test inv(c)*c == CoxeterDecomposition(n, Int[])
 

@@ -211,3 +211,22 @@ julia> longest_decreasing(p)
   5
   1
 ```
+
+
+## Coxeter Decomposition
+
+Permutations can be expressed as a product of transpositions; this is known
+as a *Coxeter decomposition*. Given a permutation `p`, we get this form
+with `CoxeterDecomposition(p)`:
+```julia
+julia> p = Permutation([2,4,3,5,1,6,8,7])
+(1,2,4,5)(3)(6)(7,8)
+
+julia> pp = CoxeterDecomposition(p)
+Permutation of 1:8: (1,2)(2,3)(3,4)(2,3)(4,5)(7,8)
+```
+The original permutation can be recovered like this:
+```julia
+julia> Permutation(pp)
+(1,2,4,5)(3)(6)(7,8)
+```

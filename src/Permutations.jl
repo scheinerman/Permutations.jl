@@ -15,7 +15,7 @@ export inv, cycles, cycle_string
 export order, matrix, fixed_points
 export longest_increasing, longest_decreasing, reverse, sign
 export hash
-export CoxeterGenerator, CoxeterDecomposition
+export CoxeterDecomposition  # no reason to expose CoxeterGenerator
 
 # Defines the Permutation class. Permutations are bijections of 1:n.
 
@@ -368,6 +368,11 @@ function _coxeter_reduce!(terms::Vector{Int})
     terms
 end
 
+
+"""
+`CoxeterDecomposition(p)` expresses the `Permutation` `p` as a
+composition of transpositions.
+"""
 struct CoxeterDecomposition <: AbstractPermutation
     n::Int
     terms::Vector{Int}
@@ -430,9 +435,13 @@ end
 inv(A::CoxeterDecomposition) = CoxeterDecomposition(A.n, reverse(A.terms))
 
 function show(io::IO, p::CoxeterDecomposition)
-    print(io, "length $(length(p)) permutation: ")
+    print(io, "Permutation of 1:$(length(p)): ")
+    if length(p.terms)==0
+        print(io,"()")
+    end
     for i in p.terms
-        print(io, "s_$(i)")
+        # print(io, "s_$(i)")
+        print(io,"($i,$(i+1))")
     end
 end
 
