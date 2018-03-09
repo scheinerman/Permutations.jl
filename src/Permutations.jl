@@ -371,7 +371,7 @@ end
 
 """
 `CoxeterDecomposition(p)` expresses the `Permutation` `p` as a
-composition of transpositions.
+composition of transpositions of the form `(k,k+1)`.
 """
 struct CoxeterDecomposition <: AbstractPermutation
     n::Int

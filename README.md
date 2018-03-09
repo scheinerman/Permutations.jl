@@ -215,8 +215,10 @@ julia> longest_decreasing(p)
 
 ## Coxeter Decomposition
 
-Permutations can be expressed as a product of transpositions; this is known
-as a *Coxeter decomposition*. Given a permutation `p`, we get this form
+Every permutation can be expressed as a product of transpositions. In
+a *Coxeter decomposition* the permutation is the product of transpositions
+of the form `(j,j+1)`.
+Given a permutation `p`, we get this form
 with `CoxeterDecomposition(p)`:
 ```julia
 julia> p = Permutation([2,4,3,5,1,6,8,7])
