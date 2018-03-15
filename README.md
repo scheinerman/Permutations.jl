@@ -34,7 +34,7 @@ A `Permutation` can be converted to an array (equal to the array used
 to construct the `Permutation` in the first place) or can be presented
 as a two-row matrix as follows:
 ```julia
-julia> array(p)
+julia> p.data
 6-element Array{Int64,1}:
  4
  1
@@ -48,7 +48,7 @@ julia> two_row(p)
  4  1  3  2  6  5
 ```
 
-The evaulation of a `Permutation` on a particular element is performed
+The evaluation of a `Permutation` on a particular element is performed
 using square bracket notation:
 ```julia
 julia> p[2]
@@ -76,7 +76,7 @@ julia> q*p
 Repeated composition is calculated using `^`, like this: `p^n`.
 The exponent can be negative.
 
-The inverse of a `Permtuation` is computed using `inv`:
+The inverse of a `Permutation` is computed using `inv`:
 ```julia
 julia> q = inv(p)
 (1,2,4)(3)(5,6)
@@ -94,21 +94,21 @@ julia> cycles(p)
  [5,6]
 ```
 
-The function `matrix` converts a permutation `P` to a square matrix
-whose `i,j`-entry is `1` when `j == P[i]` and `0` otherwise. By
-default, this creates a matrix with full storage; to get a sparse
-result use `matrix(p,true)`.
+The function `Matrix` converts a permutation `p` to a square matrix
+whose `i,j`-entry is `1` when `i == p[j]` and `0` otherwise.
+To get a sparse result use `sparse(p)`.
 ```julia
 julia> p = RandomPermutation(6)
-(1,2,6,4)(3,5)
-julia> matrix(p)
-6x6 Array{Int64,2}:
- 0  1  0  0  0  0
+(1,5,2,6)(3)(4)
+
+julia> Matrix(p)
+6×6 Array{Int64,2}:
  0  0  0  0  0  1
  0  0  0  0  1  0
- 1  0  0  0  0  0
  0  0  1  0  0  0
  0  0  0  1  0  0
+ 1  0  0  0  0  0
+ 0  1  0  0  0  0
 ```
 
 
@@ -152,6 +152,7 @@ like this:
 ```julia
 julia> Permutation(10)
 (1)(2)(3)(4)(5)(6)(7)(8)(9)(10)
+
 julia> RandomPermutation(10)
 (1,7,6,10,3,2,8,4)(5,9)
 ```

@@ -222,7 +222,7 @@ end
 function Matrix{T}(p::Permutation) where T
     n = length(p)
     A = eye(T,n)   #  int(eye(n))
-    return A[p.data,:]
+    return A[:,p.data]
 end
 
 Matrix(p::Permutation) = Matrix{Int}(p)
