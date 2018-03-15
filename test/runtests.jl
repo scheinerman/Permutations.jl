@@ -19,7 +19,7 @@ using Permutations
 
     P = Matrix(p)
     Q = Matrix(q)
-    @test P*Q == Matrix(q*p)
+    @test P*Q == Matrix(p*q)
     @test P' == Matrix(inv(p))
 
     row = [1,3,5,2,4,6]
@@ -40,7 +40,18 @@ using Permutations
     p = RandomPermutation(10)
     @test p*inv(p) == Permutation(10)
     @test reverse(reverse(p)) == p
+
+
+    P = Permutation([4,2,1,3])
+    v = randn(4)
+    @test P*v == v[[4,2,1,3]]
+    a,b,c,d = Permutation([2,1,3,4]),Permutation([1,2,4,3]),
+                Permutation([1,3,2,4]),Permutation([2,1,3,4])
+
+    @test a*(b*(c*(d*v))) == (a*b*c*d)*v
+    @test Matrix(a*b*c*d) == Matrix(a)*Matrix(b)*Matrix(c)*Matrix(d)
 end
+
 
 @testset "CoxeterDecomposition" begin
     n = 10

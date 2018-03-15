@@ -85,7 +85,7 @@ end
 
 # Composition of two permutations
 *(p::Permutation) = p
-function *(p::Permutation, q::Permutation)
+function *(q::Permutation, p::Permutation)
     n = length(p)
     if n != length(q)
         error("Cannot compose Permutations of different lengths")
@@ -93,6 +93,8 @@ function *(p::Permutation, q::Permutation)
     @inbounds dat = [ p.data[q.data[k]] for k in 1:n ]
     return Permutation(dat)
 end
+
+*(p::Permutation, v::AbstractVector) = v[p.data]
 
 # Inverse of a permutation
 """
@@ -410,7 +412,7 @@ function _coxeterdecomposition!(P::Permutation)
             end
         end
     end
-    reverse!(ret)
+    ret
 end
 
 ==(A::CoxeterDecomposition, B::CoxeterDecomposition) = A.terms == B.terms
