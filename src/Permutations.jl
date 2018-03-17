@@ -66,10 +66,10 @@ end
 # Check for equality of permutations
 ==(p::Permutation, q::Permutation) = p.data==q.data
 
-# Apply the Permutation to an element: p[k]
-function getindex(p::Permutation, k::Int)
-    return p.data[k]
-end
+# Apply the Permutation to an element: p[k] or p(k)
+getindex(p::Permutation, k::Int) = p.data[k]
+(p::Permutation)(k::Int) = p.data[k]
+
 
 
 # Create a two-row representation of this permutation
