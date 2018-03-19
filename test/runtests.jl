@@ -16,6 +16,7 @@ using Permutations
     q = Permutation([1,5,3,9,4,8,6,7,2])
     @test p*q != q*p
     @test q[2] == 5
+    @test q(2) == 5
 
     P = Matrix(p)
     Q = Matrix(q)
@@ -39,6 +40,7 @@ using Permutations
 
     p = RandomPermutation(10)
     @test p*inv(p) == Permutation(10)
+    @test p'*p == Permutation(10)
     @test reverse(reverse(p)) == p
 
     a,b,c,d = Permutation([2,1,3,4]),Permutation([1,2,4,3]),
@@ -63,6 +65,7 @@ end
     #@test Permutation(s₂*c) == Permutation(CoxeterDecomposition(s₂)*c) == Permutation(s₂)*p
 
     @test inv(c)*c == CoxeterDecomposition(n, Int[])
+    @test inv(c) == c'
 
     @test CoxeterDecomposition(5, [3,4,1]) == CoxeterDecomposition(5, [1,3,4])
     @test CoxeterDecomposition(5, [2,1,3,4,1]) == CoxeterDecomposition(5, [2,3,4])

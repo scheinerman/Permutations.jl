@@ -4,7 +4,7 @@
 module Permutations
 
 import Base: length, show, inv, reverse, ==, getindex, *, ^, sign, hash, getindex,
-                Matrix, Array, AbstractMatrix, AbstractArray, Array,
+                Matrix, Array, AbstractMatrix, AbstractArray, Array, ctranspose,
                 SparseMatrixCSC, AbstractSparseMatrix, AbstractSparseArray, sparse
 
 import Combinatorics: nthperm
@@ -96,7 +96,8 @@ end
 
 # Inverse of a permutation
 """
-`inv(p)` gives the inverse of `Permutation` `p`.
+`inv(p)` gives the inverse of `Permutation` `p`. This may
+also be computed with `p'`.
 """
 function inv(p::Permutation)
     n = length(p)
@@ -107,6 +108,8 @@ function inv(p::Permutation)
     end
     return Permutation(data)
 end
+
+ctranspose(p::Permutation) = inv(p)
 
 # Find the cycles in a permutation
 """
@@ -433,6 +436,7 @@ function *(A::CoxeterDecomposition, B::CoxeterDecomposition)
 end
 
 inv(A::CoxeterDecomposition) = CoxeterDecomposition(A.n, reverse(A.terms))
+ctranspose(A::CoxeterDecomposition) = inv(A)
 
 function show(io::IO, p::CoxeterDecomposition)
     print(io, "Permutation of 1:$(length(p)): ")
