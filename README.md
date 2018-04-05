@@ -215,6 +215,30 @@ julia> longest_decreasing(p)
   1
 ```
 
+## Conversion to a `Dict`
+
+For a permutation `p`, calling `dict(p)` returns a dictionary that behaves
+just like `p`.
+```julia
+julia> p = RandomPermutation(12)
+(1,11,6)(2,8,7)(3)(4,5,9,12,10)
+
+julia> d = dict(p)
+Dict{Int64,Int64} with 12 entries:
+  2  => 8
+  11 => 6
+  7  => 2
+  9  => 12
+  10 => 4
+  8  => 7
+  6  => 1
+  4  => 5
+  3  => 3
+  5  => 9
+  12 => 10
+  1  => 11
+```
+
 
 ## Coxeter Decomposition
 

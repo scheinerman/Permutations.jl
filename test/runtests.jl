@@ -47,6 +47,13 @@ using Permutations
                 Permutation([1,3,2,4]),Permutation([2,1,3,4])
 
     @test Matrix(a*b*c*d) == Matrix(a)*Matrix(b)*Matrix(c)*Matrix(d)
+
+    p = RandomPermutation(12)
+    d = dict(p)
+    for k=1:12
+        @test p(k)==d[k]
+    end
+
 end
 
 

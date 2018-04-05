@@ -1,6 +1,3 @@
-# Module written by Ed Scheinerman, ers@jhu.edu
-# distributed under terms of the MIT license
-
 module Permutations
 
 import Base: length, show, inv, reverse, ==, getindex, *, ^, sign, hash, getindex,
@@ -14,7 +11,7 @@ export length, getindex, array, two_row
 export inv, cycles, cycle_string
 export order, matrix, fixed_points
 export longest_increasing, longest_decreasing, reverse, sign
-export hash
+export hash, dict
 export CoxeterDecomposition  # no reason to expose CoxeterGenerator
 
 # Defines the Permutation class. Permutations are bijections of 1:n.
@@ -324,6 +321,19 @@ end
 # hash function so Permutations can be keys in dictionaries, etc.
 hash(p::Permutation, h::UInt64) = hash(p.data,h)
 
+"""
+`dict(p)` converts a permutation into a dictionary. If `d` is the
+result then `d[k]` equals `p(k)` for all `k` in the domain of the
+permutation.
+"""
+function dict(p::Permutation)
+    n = length(p)
+    d = Dict{Int,Int}()
+    for i=1:n
+        d[i] = p(i)
+    end
+    return d
+end
 
 #####
 # Decomposing into Coxeter generators
