@@ -1,4 +1,5 @@
 module Permutations
+using LinearAlgebra
 
 import Base: length, show, inv, reverse, ==, getindex, *, ^, sign, hash, getindex,
                 Matrix, Array, AbstractMatrix, AbstractArray, Array, adjoint
