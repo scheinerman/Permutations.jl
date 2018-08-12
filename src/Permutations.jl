@@ -49,7 +49,7 @@ Permutation(n::Int) = Permutation(collect(1:n))
 `RandomPermutation(n)` creates a random permutation of `1:n`,
 each with probability `1/factorial(n)`.
 """
-RandomPermutation(n::Int) = Permutation(randperm(n))
+RandomPermutation(n::Int) = Permutation(Random.randperm(n))
 
 # Returns the number of elements in the Permtuation
 
