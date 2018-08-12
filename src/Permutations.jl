@@ -1,10 +1,11 @@
 module Permutations
 
 import Base: length, show, inv, reverse, ==, getindex, *, ^, sign, hash, getindex,
-                Matrix, Array, AbstractMatrix, AbstractArray, Array, ctranspose,
+                Matrix, Array, AbstractMatrix, AbstractArray, Array, adjoint,
                 SparseMatrixCSC, AbstractSparseMatrix, AbstractSparseArray, sparse
 
 import Combinatorics: nthperm
+import Random: randperm
 
 export Permutation, RandomPermutation
 export length, getindex, array, two_row
@@ -49,7 +50,7 @@ Permutation(n::Int) = Permutation(collect(1:n))
 `RandomPermutation(n)` creates a random permutation of `1:n`,
 each with probability `1/factorial(n)`.
 """
-RandomPermutation(n::Int) = Permutation(Random.randperm(n))
+RandomPermutation(n::Int) = Permutation(randperm(n))
 
 # Returns the number of elements in the Permtuation
 
@@ -106,7 +107,7 @@ function inv(p::Permutation)
     return Permutation(data)
 end
 
-ctranspose(p::Permutation) = inv(p)
+adjoint(p::Permutation) = inv(p)
 
 # Find the cycles in a permutation
 """
@@ -117,7 +118,7 @@ function cycles(p::Permutation)
     result = Array{Int,1}[]
     todo = trues(n)
     while any(todo)
-        k = find(todo)[1]
+        k = findall(todo)[1]
         todo[k] = false
         cycle = [k]
         j = p[k]
@@ -221,7 +222,7 @@ end
 """
 function Matrix{T}(p::Permutation) where T
     n = length(p)
-    A = eye(T,n)   #  int(eye(n))
+    A = Matrix{T}(I,n,n)     # A = eye(T,n)   #  int(eye(n))
     return A[:,p.data]
 end
 
@@ -257,7 +258,7 @@ sparse(p::Permutation) = SparseMatrixCSC(p)
 """
 `fixed_points(p)` returns the list of values `k` for which `p(k)==k`.
 """
-fixed_points(p::Permutation) = find([ p[k]==k for k in 1:length(p)])
+fixed_points(p::Permutation) = findall([ p[k]==k for k in 1:length(p)])
 
 # Find a longest monotone subsequence of p in a given direction. This
 # is not exposed, but it is used by longest_increasing and
@@ -446,7 +447,7 @@ function *(A::CoxeterDecomposition, B::CoxeterDecomposition)
 end
 
 inv(A::CoxeterDecomposition) = CoxeterDecomposition(A.n, reverse(A.terms))
-ctranspose(A::CoxeterDecomposition) = inv(A)
+adjoint(A::CoxeterDecomposition) = inv(A)
 
 function show(io::IO, p::CoxeterDecomposition)
     print(io, "Permutation of 1:$(length(p)): ")

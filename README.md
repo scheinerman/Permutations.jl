@@ -98,7 +98,6 @@ julia> cycles(p)
 
 The function `Matrix` converts a permutation `p` to a square matrix
 whose `i,j`-entry is `1` when `i == p[j]` and `0` otherwise.
-To get a sparse result use `sparse(p)`.
 ```julia
 julia> p = RandomPermutation(6)
 (1,5,2,6)(3)(4)
@@ -113,6 +112,8 @@ julia> Matrix(p)
  0  1  0  0  0  0
 ```
 
+**Note**: `sparse` method has been removed during transition from
+Julia 0.6 to 0.7.
 
 The sign of a `Permutation` is `+1` for an even permutation and `-1`
 for an odd permutation.
