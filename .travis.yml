@@ -26,6 +26,6 @@ git:
 #  - julia -e 'Pkg.clone(pwd()); Pkg.build("$pkg_name"); Pkg.test("$pkg_name"; coverage=true)'
 after_success:
   # push coverage results to Coveralls
-  - julia -e 'cd(Pkg.dir("$pkg_name")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
+  - julia -e 'cd(Pkg.dir("Permutations")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
   # push coverage results to Codecov
-  - julia -e 'cd(Pkg.dir("$pkg_name")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+  - julia -e 'cd(Pkg.dir("Permutations")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
