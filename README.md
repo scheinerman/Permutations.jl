@@ -96,6 +96,23 @@ julia> cycles(p)
  [5,6]
 ```
 
+The `sqrt` function returns a compositional square root of the permutation.
+That is, if `q=sqrt(p)` then `q*q==p`. Note that not all permutations have
+square roots and square roots are not unique.
+```julia
+julia> q
+(1)(2,3,7)(4,12,6)(5)(8,11,10)(9)
+
+julia> p = sqrt(q)
+(1)(2,7,3)(4,6,12)(5)(8,10,11)(9)
+
+julia> p*p == q
+true
+```
+
+
+
+
 The function `Matrix` converts a permutation `p` to a square matrix
 whose `i,j`-entry is `1` when `i == p[j]` and `0` otherwise.
 ```julia

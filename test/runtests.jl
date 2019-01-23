@@ -1,4 +1,4 @@
-using Compat.Test
+using Test
 using Permutations
 
 @testset "Permutation" begin
@@ -53,6 +53,12 @@ using Permutations
     for k=1:12
         @test p(k)==d[k]
     end
+
+
+    p = RandomPermutation(12)
+    pp = p*p
+    q = sqrt(pp)
+    @test q*q == pp
 
 end
 

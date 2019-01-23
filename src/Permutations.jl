@@ -468,4 +468,6 @@ end
 @deprecate matrix(p::Permutation, sparse::Bool = false) sparse ? sparse(p) : Matrix(p)
 
 
+include("sqrt.jl")
+
 end # end of module Permutations
