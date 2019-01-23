@@ -100,13 +100,13 @@ The `sqrt` function returns a compositional square root of the permutation.
 That is, if `q=sqrt(p)` then `q*q==p`. Note that not all permutations have
 square roots and square roots are not unique.
 ```julia
-julia> q
-(1)(2,3,7)(4,12,6)(5)(8,11,10)(9)
+julia> p
+(1,12,7,4)(2,8,3)(5,15,11,14)(6,10,13)(9)
 
-julia> p = sqrt(q)
-(1)(2,7,3)(4,6,12)(5)(8,10,11)(9)
+julia> q = sqrt(p)
+(1,5,12,15,7,11,4,14)(2,3,8)(6,13,10)(9)
 
-julia> p*p == q
+julia> q*q == p
 true
 ```
 
