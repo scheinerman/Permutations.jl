@@ -92,3 +92,5 @@ function sqrt(p::Permutation)::Permutation
     end
     return Permutation(result)
 end
+
+√(p::Permutation) = sqrt(p)
