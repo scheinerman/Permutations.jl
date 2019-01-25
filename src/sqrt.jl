@@ -12,7 +12,7 @@ import Base.sqrt
 function weave(c::Array{Int,1})::Array{Int,1}
     nc = length(c)
     if nc%2 == 0
-        @error "Attempting to weave $c, an even-length cycle, with itself"
+        error("Attempting to weave $c, an even-length cycle, with itself")
     end
     half = Int((nc+1)/2)
     result = zeros(Int,nc)
@@ -26,15 +26,6 @@ function weave(c::Array{Int,1})::Array{Int,1}
             jj = nc
         end
     end
-    #
-    #
-    # for j=1:nc
-    #     jj = (j+half) % nc
-    #     if jj==0
-    #         jj = nc
-    #     end
-    #     result[jj] = c[j]
-    # end
     return result
 end
 
@@ -76,11 +67,11 @@ function sqrt(p::Permutation)::Permutation
             idx += 1
         else
             if idx == nc
-                @error err_msg
+                error(err_msg)
             end
             cyc2 = clist[idx+1]
             if length(cyc2) != length(cyc)
-                @error err_msg
+                error(err_msg)
             end
             tmp = weave(cyc,cyc2)
             for j=1:2m-1
