@@ -363,21 +363,24 @@ end
 # https://en.wikipedia.org/wiki/Symmetric_group#Generators_and_relations
 # combined with a sorting for uniqueness
 function _coxeter_reduce!(terms::Vector{Int})
+    @label start
     for i = 1:length(terms)-1
         # sᵢ^2 = I
         if terms[i] == terms[i+1]
-            return _coxeter_reduce!(deleteat!(terms, i:i+1))
+            deleteat!(terms, i:i+1)
+            @goto start
         end
         # sort using s_is_j = s_js_i
         if terms[i+1] ≠ terms[i]-1 && terms[i+1] ≠ terms[i]+1 && terms[i] > terms[i+1]
             terms[i], terms[i+1] = terms[i+1], terms[i]
-            return _coxeter_reduce!(terms)
+            @goto start
         end
     end
     # (s_is_{i+1})^3 = I
     for i = 1:length(terms)-5
         if terms[i]+1 == terms[i+1] == terms[i+2]+1 == terms[i+3] == terms[i+4]+1 == terms[i+5]
-            return _coxeter_reduce!(deleteat!(terms, i:i+5))
+            deleteat!(terms, i:i+5)
+            @goto start
         end
     end
 
