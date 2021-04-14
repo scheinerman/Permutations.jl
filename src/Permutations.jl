@@ -370,13 +370,13 @@ function _coxeter_reduce!(terms::Vector{Int})
             deleteat!(terms, i:i+1)
             @goto start
         end
-        # sort using s_is_j = s_js_i
+        # sort using sᵢsⱼ = sⱼsᵢ
         if terms[i+1] ≠ terms[i]-1 && terms[i+1] ≠ terms[i]+1 && terms[i] > terms[i+1]
             terms[i], terms[i+1] = terms[i+1], terms[i]
             @goto start
         end
     end
-    # (s_is_{i+1})^3 = I
+    # (sᵢsᵢ₊₁)^3 = I
     for i = 1:length(terms)-5
         if terms[i]+1 == terms[i+1] == terms[i+2]+1 == terms[i+3] == terms[i+4]+1 == terms[i+5]
             deleteat!(terms, i:i+5)
