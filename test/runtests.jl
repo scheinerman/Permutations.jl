@@ -87,4 +87,5 @@ end
     @test Permutation(CoxeterDecomposition(5, Int[])).data ≈ 1:5
     @test Permutation(CoxeterDecomposition(5, [1])).data == [2; 1; 3:5]
     @test inv(CoxeterDecomposition(6, [1,3,5])) == CoxeterDecomposition(6, [1,3,5])
+    @test CoxeterDecomposition(RandomPermutation(100)) isa CoxeterDecomposition # check for stack overflow
 end
