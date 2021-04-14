@@ -346,7 +346,7 @@ struct CoxeterGenerator <: AbstractPermutation
     n::Int
     i::Int
     function CoxeterGenerator(n::Int, i::Int)
-        1 ≤ i ≤ n-1 || throw(ArgumentError("$i must be between 1 and $n-1"))
+        1 ≤ i ≤ n-1 || throw(ArgumentError("$i must be between 1 and $n-1"))
         new(n, i)
     end
 end
@@ -394,7 +394,7 @@ struct CoxeterDecomposition <: AbstractPermutation
     terms::Vector{Int}
     function CoxeterDecomposition(n::Int, terms::Vector{Int})
         for t in terms
-            1 ≤ t ≤ n-1 || throw(ArgumentError("$t must be between 1 and $n-1"))
+            1 ≤ t ≤ n-1 || throw(ArgumentError("$t must be between 1 and $n-1"))
         end
         new(n, _coxeter_reduce!(terms))
     end
