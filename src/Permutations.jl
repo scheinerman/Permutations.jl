@@ -1,8 +1,24 @@
 module Permutations
 using LinearAlgebra
 
-import Base: length, show, inv, reverse, ==, getindex, *, ^, sign, hash, getindex,
-                Matrix, Array, AbstractMatrix, AbstractArray, Array, adjoint
+import Base:
+    length,
+    show,
+    inv,
+    reverse,
+    ==,
+    getindex,
+    *,
+    ^,
+    sign,
+    hash,
+    getindex,
+    Matrix,
+    Array,
+    AbstractMatrix,
+    AbstractArray,
+    Array,
+    adjoint
 
 #                SparseMatrixCSC, AbstractSparseMatrix, AbstractSparseArray, sparse
 
@@ -14,7 +30,7 @@ export length, getindex, array, two_row
 export inv, cycles, cycle_string
 export order, matrix, fixed_points
 export longest_increasing, longest_decreasing, reverse, sign
-export hash, dict
+export hash, dict, Transposition
 export CoxeterDecomposition  # no reason to expose CoxeterGenerator
 
 # Defines the Permutation class. Permutations are bijections of 1:n.
@@ -41,12 +57,27 @@ end
 Permutation(v::AbstractVector) = Permutation(Vector{Int}(v))
 
 # create the k'th permutation of 1:n
-function Permutation(n,k)
-    return Permutation(nthperm(collect(1:n),k))
+function Permutation(n, k)
+    return Permutation(nthperm(collect(1:n), k))
 end
 
 # create the identity permutation
 Permutation(n::Int) = Permutation(collect(1:n))
+
+
+
+"""
+    Transposition(n,a,b)
+
+Create a permutation of `1:n` swapping `a` for `b`.
+"""
+function Transposition(n::Int, a::Int, b::Int)::Permutation
+    @assert 0 < a ≤ n && 0 < b ≤ n && a ≠ b "Require n,a,b to be positive, with 0 ≤ a ≠ b ≤ n, got n=$n, a=$a, and b=$b"
+    list = collect(1:n)
+    @inbounds list[a] = b
+    @inbounds list[b] = a
+    return Permutation(list)
+end
 
 """
 `RandomPermutation(n)` creates a random permutation of `1:n`,
@@ -64,7 +95,7 @@ function length(p::Permutation)
 end
 
 # Check for equality of permutations
-==(p::Permutation, q::Permutation) = p.data==q.data
+==(p::Permutation, q::Permutation) = p.data == q.data
 
 # Apply the Permutation to an element: p[k] or p(k)
 getindex(p::Permutation, k::Int) = p.data[k]
@@ -80,7 +111,7 @@ values `p(1), p(2), ..., p(n)`.
 """
 function two_row(p::Permutation)
     n = length(p)
-    return [ (1:n)'; p.data']
+    return [(1:n)'; p.data']
 end
 
 # Composition of two permutations
@@ -90,7 +121,7 @@ function *(p::Permutation, q::Permutation)
     if n != length(q)
         error("Cannot compose Permutations of different lengths")
     end
-    @inbounds dat = [ p.data[q.data[k]] for k in 1:n ]
+    @inbounds dat = [p.data[q.data[k]] for k = 1:n]
     return Permutation(dat)
 end
 
@@ -101,8 +132,8 @@ also be computed with `p'`.
 """
 function inv(p::Permutation)
     n = length(p)
-    data = zeros(Int,n)
-    for k=1:n
+    data = zeros(Int, n)
+    for k = 1:n
         @inbounds j = p.data[k]
         @inbounds data[j] = k
     end
@@ -125,7 +156,7 @@ function cycles(p::Permutation)
         cycle = [k]
         j = p[k]
         while j != k
-            append!(cycle,[j])
+            append!(cycle, [j])
             todo[j] = false
             j = p[j]
         end
@@ -139,7 +170,7 @@ end
 from the cycle structure of the permutation `p`.
 """
 function cycle_string(p::Permutation)
-    if length(p)==0
+    if length(p) == 0
         return "()"
     end
     str = ""
@@ -155,9 +186,9 @@ end
 function array2string(a::Array{Int,1})
     n = length(a)
     res = "("
-    for k=1:n
+    for k = 1:n
         res *= string(a[k])
-        if k<n
+        if k < n
             res *= ","
         else
             res *= ")"
@@ -171,9 +202,9 @@ end
 """
 function sign(p::Permutation)
     cc = cycles(p)
-    szs = [ length(c)+1 for c in cc ]
-    par = sum(szs)%2
-    return (par>0) ? -1 : 1
+    szs = [length(c) + 1 for c in cc]
+    par = sum(szs) % 2
+    return (par > 0) ? -1 : 1
 end
 
 
@@ -198,34 +229,34 @@ end
 
 # Extend p^n so negative exponents work too
 function ^(p::Permutation, n::Int)
-    if n==0
+    if n == 0
         return Permutation(length(p))
     end
-    if n<0
+    if n < 0
         return inv(p)^(-n)
     end
-    if n==1
+    if n == 1
         return p
     end
 
-    m::Int = round(Int,floor(n/2)) # int(floor(n/2))  # m = floor(n/2)
+    m::Int = round(Int, floor(n / 2)) # int(floor(n/2))  # m = floor(n/2)
     q::Permutation = p^m
 
-    if n%2 == 0   # if even
-        return q*q
+    if n % 2 == 0   # if even
+        return q * q
     end
 
-    return p*q*q
+    return p * q * q
 end
 
 # Represent as a permtuation matrix.
 """
 `Matrix(p)` returns the permutation matrix for the `Permutation` `p`.
 """
-function Matrix{T}(p::Permutation) where T
+function Matrix{T}(p::Permutation) where {T}
     n = length(p)
-    A = Matrix{T}(I,n,n)     # A = eye(T,n)   #  int(eye(n))
-    return A[:,p.data]
+    A = Matrix{T}(I, n, n)     # A = eye(T,n)   #  int(eye(n))
+    return A[:, p.data]
 end
 
 Matrix(p::Permutation) = Matrix{Int}(p)
@@ -233,9 +264,9 @@ Array(p::Permutation) = Matrix(p)
 AbstractMatrix(p::Permutation) = Matrix(p)
 AbstractArray(p::Permutation) = Matrix(p)
 
-Array{T}(p::Permutation) where T = Matrix{T}(p)
-AbstractMatrix{T}(p::Permutation) where T = Matrix{T}(p)
-AbstractArray{T}(p::Permutation) where T = Matrix{T}(p)
+Array{T}(p::Permutation) where {T} = Matrix{T}(p)
+AbstractMatrix{T}(p::Permutation) where {T} = Matrix{T}(p)
+AbstractArray{T}(p::Permutation) where {T} = Matrix{T}(p)
 
 #
 # """
@@ -260,23 +291,23 @@ AbstractArray{T}(p::Permutation) where T = Matrix{T}(p)
 """
 `fixed_points(p)` returns the list of values `k` for which `p(k)==k`.
 """
-fixed_points(p::Permutation) = findall([ p[k]==k for k in 1:length(p)])
+fixed_points(p::Permutation) = findall([p[k] == k for k = 1:length(p)])
 
 # Find a longest monotone subsequence of p in a given direction. This
 # is not exposed, but it is used by longest_increasing and
 # longest_increasing.
-function longest_monotone(p::Permutation, order=<)
+function longest_monotone(p::Permutation, order = <)
     n = length(p)
-    if n==0
+    if n == 0
         return Int[]
     end
-    scores = ones(Int,n)
+    scores = ones(Int, n)
     scores[n] = 1
 
-    for k=n-1:-1:1
-        for i=k+1:n
-            if order(p[k],p[i]) && scores[k] <= scores[i]
-                scores[k] = scores[i]+1
+    for k = n-1:-1:1
+        for i = k+1:n
+            if order(p[k], p[i]) && scores[k] <= scores[i]
+                scores[k] = scores[i] + 1
             end
         end
     end
@@ -284,13 +315,13 @@ function longest_monotone(p::Permutation, order=<)
     seq = Int[]
     mx = maximum(scores)
     a = findfirst([s == mx for s in scores])
-    push!(seq,a)
+    push!(seq, a)
 
     while scores[a] > 1
-        val = scores[a]-1
-        idx = findfirst([scores[k]==val && order(p[a],p[k]) for k=a+1:n ])
+        val = scores[a] - 1
+        idx = findfirst([scores[k] == val && order(p[a], p[k]) for k = a+1:n])
         a += idx
-        push!(seq,a)
+        push!(seq, a)
     end
 
     return [p[i] for i in seq]
@@ -302,14 +333,14 @@ Let `p` be a `Permutation`. Thinking of this as a list of values,
 `longest_increasing(p)` returns a longest subsequence of values
 that are in ascending order
 """
-longest_increasing(p::Permutation) = longest_monotone(p,<)
+longest_increasing(p::Permutation) = longest_monotone(p, <)
 
 """
 Let `p` be a `Permutation`. Thinking of this as a list of values,
 `longest_decreasing(p)` returns a longest subsequence of values
 that are in descending order
 """
-longest_decreasing(p::Permutation) = longest_monotone(p,>)
+longest_decreasing(p::Permutation) = longest_monotone(p, >)
 
 """
 Let `p` be a `Permutation`. Thinking of `p` as a list of values,
@@ -322,7 +353,7 @@ function reverse(p::Permutation)
 end
 
 # hash function so Permutations can be keys in dictionaries, etc.
-hash(p::Permutation, h::UInt64) = hash(p.data,h)
+hash(p::Permutation, h::UInt64) = hash(p.data, h)
 
 """
 `dict(p)` converts a permutation into a dictionary. If `d` is the
@@ -332,7 +363,7 @@ permutation.
 function dict(p::Permutation)
     n = length(p)
     d = Dict{Int,Int}()
-    for i=1:n
+    for i = 1:n
         d[i] = p(i)
     end
     return d
@@ -346,13 +377,13 @@ struct CoxeterGenerator <: AbstractPermutation
     n::Int
     i::Int
     function CoxeterGenerator(n::Int, i::Int)
-        1 ≤ i ≤ n-1 || throw(ArgumentError("$i must be between 1 and $n-1"))
+        1 ≤ i ≤ n - 1 || throw(ArgumentError("$i must be between 1 and $n-1"))
         new(n, i)
     end
 end
 
 length(sᵢ::CoxeterGenerator) = sᵢ.n
-Permutation(P::CoxeterGenerator) = Permutation([1:P.i-1; P.i+1; P.i; P.i+2:P.n])
+Permutation(P::CoxeterGenerator) = Permutation([1:P.i-1; P.i + 1; P.i; P.i+2:P.n])
 
 function show(io::IO, p::CoxeterGenerator)
     print(io, "length $(p.n) permutation: s_$(p.i)")
@@ -371,14 +402,19 @@ function _coxeter_reduce!(terms::Vector{Int})
             @goto start
         end
         # sort using sᵢsⱼ = sⱼsᵢ
-        if terms[i+1] ≠ terms[i]-1 && terms[i+1] ≠ terms[i]+1 && terms[i] > terms[i+1]
+        if terms[i+1] ≠ terms[i] - 1 && terms[i+1] ≠ terms[i] + 1 && terms[i] > terms[i+1]
             terms[i], terms[i+1] = terms[i+1], terms[i]
             @goto start
         end
     end
     # (sᵢsᵢ₊₁)^3 = I
     for i = 1:length(terms)-5
-        if terms[i]+1 == terms[i+1] == terms[i+2]+1 == terms[i+3] == terms[i+4]+1 == terms[i+5]
+        if terms[i] + 1 ==
+           terms[i+1] ==
+           terms[i+2] + 1 ==
+           terms[i+3] ==
+           terms[i+4] + 1 ==
+           terms[i+5]
             deleteat!(terms, i:i+5)
             @goto start
         end
@@ -397,13 +433,14 @@ struct CoxeterDecomposition <: AbstractPermutation
     terms::Vector{Int}
     function CoxeterDecomposition(n::Int, terms::Vector{Int})
         for t in terms
-            1 ≤ t ≤ n-1 || throw(ArgumentError("$t must be between 1 and $n-1"))
+            1 ≤ t ≤ n - 1 || throw(ArgumentError("$t must be between 1 and $n-1"))
         end
         new(n, _coxeter_reduce!(terms))
     end
 end
 
-CoxeterDecomposition(n::Int, terms::AbstractVector) = CoxeterDecomposition(n, Vector{Int}(terms))
+CoxeterDecomposition(n::Int, terms::AbstractVector) =
+    CoxeterDecomposition(n, Vector{Int}(terms))
 CoxeterDecomposition(sᵢ::CoxeterGenerator) = CoxeterDecomposition(sᵢ.n, [sᵢ.i])
 
 length(P::CoxeterDecomposition) = P.n
@@ -412,19 +449,20 @@ function Permutation(P::CoxeterDecomposition)
     if isempty(P.terms)
         Permutation(1:P.n)
     else
-        *(Permutation.(CoxeterGenerator.(P.n,P.terms))...)
+        *(Permutation.(CoxeterGenerator.(P.n, P.terms))...)
     end
 end
 CoxeterDecomposition(P::Permutation) = CoxeterDecomposition!(Permutation(copy(P.data)))
-CoxeterDecomposition!(P::Permutation) = CoxeterDecomposition(length(P), _coxeterdecomposition!(P))
+CoxeterDecomposition!(P::Permutation) =
+    CoxeterDecomposition(length(P), _coxeterdecomposition!(P))
 function _coxeterdecomposition!(P::Permutation)
     n = length(P)
     data = P.data
     ret = Int[]
     while !issorted(data)
-        for k=1:n-1
+        for k = 1:n-1
             if data[k] > data[k+1]
-                data[k], data[k+1] =  data[k+1], data[k]
+                data[k], data[k+1] = data[k+1], data[k]
                 push!(ret, k)
             end
         end
@@ -435,19 +473,23 @@ end
 ==(A::CoxeterDecomposition, B::CoxeterDecomposition) = A.terms == B.terms
 
 function *(A::CoxeterGenerator, B::CoxeterGenerator)
-    length(A) == length(B) || throw(ArgumentError("Permutations must have same length to multiply"))
-    CoxeterDecomposition(length(A), [A.i,B.i])
+    length(A) == length(B) ||
+        throw(ArgumentError("Permutations must have same length to multiply"))
+    CoxeterDecomposition(length(A), [A.i, B.i])
 end
 function *(A::CoxeterGenerator, B::CoxeterDecomposition)
-    length(A) == length(B) || throw(ArgumentError("Permutations must have same length to multiply"))
+    length(A) == length(B) ||
+        throw(ArgumentError("Permutations must have same length to multiply"))
     CoxeterDecomposition(length(A), [A.i; B.terms])
 end
 function *(A::CoxeterDecomposition, B::CoxeterGenerator)
-    length(A) == length(B) || throw(ArgumentError("Permutations must have same length to multiply"))
+    length(A) == length(B) ||
+        throw(ArgumentError("Permutations must have same length to multiply"))
     CoxeterDecomposition(length(A), [A.terms; B.i])
 end
 function *(A::CoxeterDecomposition, B::CoxeterDecomposition)
-    length(A) == length(B) || throw(ArgumentError("Permutations must have same length to multiply"))
+    length(A) == length(B) ||
+        throw(ArgumentError("Permutations must have same length to multiply"))
     CoxeterDecomposition(length(A), [A.terms; B.terms])
 end
 
@@ -456,12 +498,12 @@ adjoint(A::CoxeterDecomposition) = inv(A)
 
 function show(io::IO, p::CoxeterDecomposition)
     print(io, "Permutation of 1:$(length(p)): ")
-    if length(p.terms)==0
-        print(io,"()")
+    if length(p.terms) == 0
+        print(io, "()")
     end
     for i in p.terms
         # print(io, "s_$(i)")
-        print(io,"($i,$(i+1))")
+        print(io, "($i,$(i+1))")
     end
 end
 

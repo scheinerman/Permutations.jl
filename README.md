@@ -60,6 +60,7 @@ ERROR: BoundsError()
  in getindex at ....
 ```
 
+
 Operations
 ----------
 
@@ -181,6 +182,15 @@ this requires `k` to be between `1` and `n!`.
 julia> Permutation(6,701)
 (1,6,3)(2,5)(4)
 ```
+
+The function `Transposition` is used to create a permutation containing
+a single two-cycle. Use `Transposition(n,a,b)` to create a permutation of 
+`1:n` that swaps `a` and `b`.
+```julia
+julia> p = Transposition(10,3,5)
+(1)(2)(3,5)(4)(6)(7)(8)(9)(10)
+```
+This function requires `1 ≤ a ≠ b ≤ n`.
 
 
 Properties
