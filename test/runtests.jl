@@ -69,6 +69,12 @@ end
     @test p == inv(p)
 end
 
+@testset "Matrix conversion" begin
+    p = RandomPermutation(10)
+    M = Matrix(p)
+    q = Permutation(M)
+    @test p == q
+end
 
 @testset "CoxeterDecomposition" begin
     n = 10

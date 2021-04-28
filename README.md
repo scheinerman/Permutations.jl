@@ -127,8 +127,18 @@ julia> Matrix(p)
  0  1  0  0  0  0
 ```
 
-**Note**: `sparse` method has been removed during transition from
-Julia 0.6 to 0.7.
+Note that a permutation matrix `M` can be converted back to a `Permutation`
+by calling `Permutation(M)`:
+```julia
+julia> p = RandomPermutation(8)
+(1,4,5,2,6,8,7)(3)
+
+julia> M = Matrix(p);
+
+julia> q = Permutation(M)
+(1,4,5,2,6,8,7)(3)
+```
+
 
 The sign of a `Permutation` is `+1` for an even permutation and `-1`
 for an odd permutation.

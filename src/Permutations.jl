@@ -20,7 +20,6 @@ import Base:
     Array,
     adjoint
 
-#                SparseMatrixCSC, AbstractSparseMatrix, AbstractSparseArray, sparse
 
 import Combinatorics: nthperm
 import Random: randperm
@@ -249,43 +248,6 @@ function ^(p::Permutation, n::Int)
     return p * q * q
 end
 
-# Represent as a permtuation matrix.
-"""
-`Matrix(p)` returns the permutation matrix for the `Permutation` `p`.
-"""
-function Matrix{T}(p::Permutation) where {T}
-    n = length(p)
-    A = Matrix{T}(I, n, n)     # A = eye(T,n)   #  int(eye(n))
-    return A[:, p.data]
-end
-
-Matrix(p::Permutation) = Matrix{Int}(p)
-Array(p::Permutation) = Matrix(p)
-AbstractMatrix(p::Permutation) = Matrix(p)
-AbstractArray(p::Permutation) = Matrix(p)
-
-Array{T}(p::Permutation) where {T} = Matrix{T}(p)
-AbstractMatrix{T}(p::Permutation) where {T} = Matrix{T}(p)
-AbstractArray{T}(p::Permutation) where {T} = Matrix{T}(p)
-
-#
-# """
-# `SparseMatrixCSC(p)` returns the permutation matrix for the `Permutation` `p`.
-# """
-# function SparseMatrixCSC{T}(p::Permutation) where T
-#     n = length(p)
-#     A = speye(T,n)   #  int(eye(n))
-#     return A[p.data,:]
-# end
-#
-# SparseMatrixCSC(p::Permutation) = SparseMatrixCSC{Int}(p)
-# AbstractSparseMatrix(p::Permutation) = SparseMatrixCSC{Int}(p)
-# AbstractSparseArray(p::Permutation) = SparseMatrixCSC{Int}(p)
-# AbstractSparseMatrix{T}(p::Permutation) where T = SparseMatrixCSC{T}(p)
-# AbstractSparseArray{T}(p::Permutation) where T = SparseMatrixCSC{T}(p)
-#
-# sparse(p::Permutation) = SparseMatrixCSC(p)
-
 
 # find the fixed points of a Permutation
 """
@@ -512,7 +474,7 @@ end
 @deprecate array(p::Permutation) p.data
 @deprecate matrix(p::Permutation, sparse::Bool = false) sparse ? sparse(p) : Matrix(p)
 
-
+include("matrix.jl")
 include("sqrt.jl")
 
 end # end of module Permutations
