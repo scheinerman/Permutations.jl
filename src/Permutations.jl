@@ -150,12 +150,12 @@ function cycles(p::Permutation)
     result = Array{Int,1}[]
     todo = trues(n)
     while any(todo)
-        k = findall(todo)[1]
+        k = findfirst(todo)
         todo[k] = false
         cycle = [k]
         j = p[k]
         while j != k
-            append!(cycle, [j])
+            push!(cycle, j)
             todo[j] = false
             j = p[j]
         end
@@ -200,10 +200,22 @@ end
 `sign(p)` is `+1` is `p` is an even `Permtuation` and `-1` if p is odd.
 """
 function sign(p::Permutation)
-    cc = cycles(p)
-    szs = [length(c) + 1 for c in cc]
-    par = sum(szs) % 2
-    return (par > 0) ? -1 : 1
+    n = length(p)
+    result = 0
+    todo = trues(n)
+    while any(todo)
+        k = findfirst(todo)
+        todo[k] = false
+        result += 1 # increment element count
+        j = p[k]
+        while j != k
+            result += 1 # increment element count
+            todo[j] = false
+            j = p[j]
+        end
+        result += 1 # increment cycle count
+    end
+    return isodd(result) ? -1 : 1
 end
 
 
