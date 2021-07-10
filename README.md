@@ -1,10 +1,4 @@
-Permutations
-============
-
-
-[![Build Status](https://travis-ci.com/scheinerman/Permutations.jl.svg?branch=master)](https://travis-ci.com/scheinerman/Permutations.jl)
-
-
+# Permutations
 
 
 This is documentation for a `Permutation` data type for Julia. We only
@@ -61,8 +55,38 @@ ERROR: BoundsError()
 ```
 
 
-Operations
-----------
+
+To get the cycle structure of a `Permutation` (not as a character string,
+but as an array of arrays), use `cycles`:
+```julia
+julia> cycles(p)
+3-element Array{Array{Int64,1},1}:
+ [1,4,2]
+ [3]
+ [5,6]
+```
+
+Given a list of disjoint cycles of `1:n`, we can recover the `Permutation`:
+```julia
+julia> p = RandomPermutation(12)
+(1,6,3,4,11,12,7,2,10,8,9,5)
+
+julia> p = RandomPermutation(12)
+(1,12,3,9,4,10,2,7)(5,11,8)(6)
+
+julia> c = cycles(p)
+3-element Vector{Vector{Int64}}:
+ [1, 12, 3, 9, 4, 10, 2, 7]
+ [5, 11, 8]
+ [6]
+
+julia> Permutation(c)
+(1,12,3,9,4,10,2,7)(5,11,8)(6)
+```
+
+## Operations
+
+### Composition 
 
 Composition is denoted by `*`:
 ```julia
@@ -74,7 +98,9 @@ julia> q*p
 (1,3,2)(4,6)(5)
 ```
 Repeated composition is calculated using `^`, like this: `p^n`.
-The exponent can be negative.
+The exponent may be negative.
+
+### Inverse
 
 The inverse of a `Permutation` is computed using `inv` or as `p'`:
 ```julia
@@ -84,15 +110,8 @@ julia> p*q
 (1)(2)(3)(4)(5)(6)
 ```
 
-To get the cycle structure of a `Permutation` (not as a character string,
-but as an array of arrays), use `cycles`:
-```julia
-julia> cycles(p)
-3-element Array{Array{Int64,1},1}:
- [1,4,2]
- [3]
- [5,6]
-```
+### Square Root
+
 
 The `sqrt` function returns a compositional square root of the permutation.
 That is, if `q=sqrt(p)` then `q*q==p`. Note that not all permutations have
@@ -108,7 +127,7 @@ julia> q*q == p
 true
 ```
 
-
+### Matrix Form
 
 
 The function `Matrix` converts a permutation `p` to a square matrix
@@ -139,6 +158,8 @@ julia> q = Permutation(M)
 (1,4,5,2,6,8,7)(3)
 ```
 
+### Sign
+
 
 The sign of a `Permutation` is `+1` for an even permutation and `-1`
 for an odd permutation.
@@ -153,6 +174,7 @@ julia> sign(p*p)
 1
 ```
 
+### Reverse
 
 If one thinks of a permutation as a sequence, then applying `reverse`
 to that permutation returns a new permutation based on the reversal of
@@ -173,8 +195,8 @@ julia> two_row(reverse(p))
 ```
 
 
-Additional constructors
------------------------
+## Additional constructors
+
 For convenience, identity and random permutations can be constructed
 like this:
 ```julia
@@ -203,8 +225,8 @@ julia> p = Transposition(10,3,5)
 This function requires `1 ≤ a ≠ b ≤ n`.
 
 
-Properties
-----------
+## Properties
+
 
 A *fixed point* of a permutation `p` is a value `k` such that
 `p[k]==k`. The function `fixed_points` returns a list of the fixed
