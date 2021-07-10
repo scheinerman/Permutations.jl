@@ -43,7 +43,9 @@ function weave(c1::Array{Int,1}, c2::Array{Int,1})::Array{Int,1}
     return result
 end
 """
-`sqrt(p::Permutation)` returns a `Permutation` `q` such that
+    sqrt(p::Permutation)
+
+Returns a `Permutation` `q` such that
 `q*q==p`. Note: There may be other square roots besides the one
 returned. If `p` does not have a square root, an error is thrown.
 """

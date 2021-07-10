@@ -1,7 +1,8 @@
-
 # Represent as a permtuation matrix.
 """
-`Matrix(p)` returns the permutation matrix for the `Permutation` `p`.
+    Matrix(p::Permutation)
+
+Return the permutation matrix for `p`.
 """
 function Matrix{T}(p::Permutation) where {T}
     n = length(p)

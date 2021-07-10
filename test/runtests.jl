@@ -64,6 +64,19 @@ using Permutations
 
 end
 
+@testset "Cycles" begin
+    p = Permutation(10)
+    @test length(cycles(p)) == 10
+    p = Permutation([2, 3, 4, 5, 1])
+    @test length(cycles(p)) == 1
+
+    for i = 1:10
+        p = RandomPermutation(20)
+        cp = cycles(p)
+        @test Permutation(cp) == p
+    end
+end
+
 @testset "Transposition function" begin
     p = Transposition(10, 3, 6)
     @test p == inv(p)
@@ -82,13 +95,6 @@ end
     c = CoxeterDecomposition(p)
     @test p == Permutation(c)
 
-    #s₂ = CoxeterGenerator(n, 2)
-    #@test Permutation(s₂) == Permutation([1; 3; 2; 4:n])
-    #@test s₂*c isa CoxeterDecomposition
-    #@test c*s₂ isa CoxeterDecomposition
-    #@test s₂*s₂ isa CoxeterDecomposition
-    #@test s₂*c == CoxeterDecomposition(s₂)*c
-    #@test Permutation(s₂*c) == Permutation(CoxeterDecomposition(s₂)*c) == Permutation(s₂)*p
 
     @test inv(c) * c == CoxeterDecomposition(n, Int[])
     @test inv(c) == c'

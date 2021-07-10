@@ -38,9 +38,13 @@ export CoxeterDecomposition  # no reason to expose CoxeterGenerator
 abstract type AbstractPermutation end
 
 """
+    Permutation
+
 * `Permutation(list)` creates a new `Permutation`. Here `list` must be a rearrangement of `1:n`.
 * `Permutation(n)` creates the identity `Permutation` of `1:n`.
 * `Permutation(n,k)` creates the `k`'th `Permutation` of `1:n`.
+* `Permutation(P::Matrix{Int})` creates a `Permutation` from a permutation matrix. 
+* `Permutation(cycles::Vector{Vector{Int}})` creates a `Permutation` from a list of disjoint cycles.
 """
 struct Permutation <: AbstractPermutation
     data::Vector{Int}
@@ -79,17 +83,20 @@ function Transposition(n::Int, a::Int, b::Int)::Permutation
 end
 
 """
-`RandomPermutation(n)` creates a random permutation of `1:n`,
-each with probability `1/factorial(n)`.
+    RandomPermutation(n::Int)
+
+Create a random permutation of `1:n`, each with probability `1/factorial(n)`.
 """
 RandomPermutation(n::Int) = Permutation(randperm(n))
 
 # Returns the number of elements in the Permtuation
 
 """
-`length(p)` is the number of elements in the `Permutation` `p`.
+    length(p::Permutation)
+
+Return the number of elements in `p`.
 """
-function length(p::Permutation)
+function length(p::Permutation)::Int
     return length(p.data)
 end
 
@@ -104,11 +111,13 @@ getindex(p::Permutation, k::Int) = p.data[k]
 
 # Create a two-row representation of this permutation
 """
-`two_row(p)` creates a two-row representation of the `Permutation` `p`
+    two_row(p::Permutation)
+
+Createa a two-row representation of the `Permutation` `p`
 in which the first row is `1:n` and the second row are the
 values `p(1), p(2), ..., p(n)`.
 """
-function two_row(p::Permutation)
+function two_row(p::Permutation)::Matrix{Int}
     n = length(p)
     return [(1:n)'; p.data']
 end
@@ -126,7 +135,9 @@ end
 
 # Inverse of a permutation
 """
-`inv(p)` gives the inverse of `Permutation` `p`. This may
+    inv(p::Permutation) 
+
+Give the inverse of `Permutation` `p`. This may
 also be computed with `p'`.
 """
 function inv(p::Permutation)
@@ -143,7 +154,9 @@ adjoint(p::Permutation) = inv(p)
 
 # Find the cycles in a permutation
 """
-`cycles(p)` returns a list of the cycles in `Permutation` `p`.
+    cycles(p::Permutation)
+
+Return a list of the cycles in `Permutation` `p`.
 """
 function cycles(p::Permutation)
     n = length(p)
@@ -165,10 +178,12 @@ function cycles(p::Permutation)
 end
 
 """
-`cycle_string(p)` creates a nice, prinatble string representation
+    cycle_string(p::Permutation)
+
+Create a nice, prinatble string representation
 from the cycle structure of the permutation `p`.
 """
-function cycle_string(p::Permutation)
+function cycle_string(p::Permutation)::String
     if length(p) == 0
         return "()"
     end
@@ -197,9 +212,11 @@ function array2string(a::Array{Int,1})
 end
 
 """
-`sign(p)` is `+1` is `p` is an even `Permtuation` and `-1` if p is odd.
+    sign(p::Permutation) 
+
+Return `+1` if`p` is an even `Permtuation` and `-1` if p is odd.
 """
-function sign(p::Permutation)
+function sign(p::Permutation)::Int
     n = length(p)
     result = 0
     todo = trues(n)
@@ -219,6 +236,26 @@ function sign(p::Permutation)
 end
 
 
+
+function Permutation(cc::Vector{Vector{Int}})::Permutation
+    # check the list of cycles has exactly one each from 1 to n
+    elts = sort(union(cc...))
+    n = length(elts)
+    plist = collect(1:n)
+    @assert elts == plist "Invalid list of cycles"
+
+    for c in cc
+        nc = length(c)
+        for i = 1:nc
+            a = c[i]
+            b = c[mod1(i + 1, nc)]
+            plist[a] = b
+        end
+    end
+    return Permutation(plist)
+end
+
+
 # When we print a permutation, it appears in disjoint cycle format.
 function show(io::IO, p::Permutation)
     print(io, cycle_string(p))
@@ -226,7 +263,9 @@ end
 
 # Find the smallest positive n such that p^n is the identity
 """
-`order(p)` is the smallest positive integer `n`
+    order(p::Permutation)
+
+Return the smallest positive integer `n`
 such that `p^n` is the identity `Permutation`.
 """
 function order(p::Permutation)
@@ -263,14 +302,16 @@ end
 
 # find the fixed points of a Permutation
 """
-`fixed_points(p)` returns the list of values `k` for which `p(k)==k`.
+    fixed_points(p::Permutation)
+
+Return the list of values `k` for which `p(k)==k`.
 """
 fixed_points(p::Permutation) = findall([p[k] == k for k = 1:length(p)])
 
 # Find a longest monotone subsequence of p in a given direction. This
 # is not exposed, but it is used by longest_increasing and
 # longest_increasing.
-function longest_monotone(p::Permutation, order = <)
+function longest_monotone(p::Permutation, order = <)::Vector{Int}
     n = length(p)
     if n == 0
         return Int[]
@@ -302,26 +343,31 @@ function longest_monotone(p::Permutation, order = <)
 
 end
 
+
 """
-Let `p` be a `Permutation`. Thinking of this as a list of values,
-`longest_increasing(p)` returns a longest subsequence of values
-that are in ascending order
+    longest_increasing(p::Permutation)
+
+Thinking of `p` as a list of values, return a longest subsequence of values
+that are in ascending order.
 """
 longest_increasing(p::Permutation) = longest_monotone(p, <)
 
 """
-Let `p` be a `Permutation`. Thinking of this as a list of values,
-`longest_decreasing(p)` returns a longest subsequence of values
-that are in descending order
+    longest_decreasing(p::Permutation)
+
+Thinking of `p` as a list of values, return a longest subsequence of values
+that are in descending order.
 """
 longest_decreasing(p::Permutation) = longest_monotone(p, >)
 
 """
-Let `p` be a `Permutation`. Thinking of `p` as a list of values,
-`reverse(p)` creates a `Permutation` with those values in reverse
+    reverse(p::Permutation)
+
+Thinking of `p` as a list of values,
+return a `Permutation` with those values in reverse
 sequence.
 """
-function reverse(p::Permutation)
+function reverse(p::Permutation)::Permutation
     d = reverse(p.data)
     return Permutation(d)
 end
@@ -330,11 +376,13 @@ end
 hash(p::Permutation, h::UInt64) = hash(p.data, h)
 
 """
-`dict(p)` converts a permutation into a dictionary. If `d` is the
+    dict(p::Permutation)
+
+Convert a permutation into a dictionary. If `d` is the
 result then `d[k]` equals `p(k)` for all `k` in the domain of the
 permutation.
 """
-function dict(p::Permutation)
+function dict(p::Permutation)::Dict{Int,Int}
     n = length(p)
     d = Dict{Int,Int}()
     for i = 1:n
@@ -399,7 +447,9 @@ end
 
 
 """
-`CoxeterDecomposition(p)` expresses the `Permutation` `p` as a
+    CoxeterDecomposition(p::Permutation)
+
+Express the `Permutation` `p` as a
 composition of transpositions of the form `(k,k+1)`.
 """
 struct CoxeterDecomposition <: AbstractPermutation
