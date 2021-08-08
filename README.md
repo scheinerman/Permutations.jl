@@ -293,25 +293,42 @@ Alternatively, `PermGen` may be called with a dictionary of lists or list of lis
 The permutations generated will have the property that the value of the permutation at argument `k` must be one of the values stored in `d[k]`. 
 For example, to find all derangements of `{1,2,3,4}` we do this:
 ```julia
-julia> d = [ [2,3,4], [1,3,4], [1,2,4], [1,2,3]]
+julia> d = [ [2,3,4], [1,3,4], [1,2,4], [1,2,3] ]
 4-element Vector{Vector{Int64}}:
  [2, 3, 4]
  [1, 3, 4]
  [1, 2, 4]
  [1, 2, 3]
+ ```
+ Thus `d[1]` gives all allowable values for the first position in the permutation, and so forth. We could equally well have done this:
+```
+julia> d = Dict{Int, Vector{Int}}();
 
-julia> for p in PermGen(d)
-       println(p)
+julia> for k=1:4
+       d[k] = setdiff(1:4,k)
        end
-(1,4)(2,3)
-(1,3,2,4)
-(1,2,3,4)
-(1,4,2,3)
-(1,3)(2,4)
-(1,3,4,2)
-(1,2,4,3)
-(1,4,3,2)
-(1,2)(3,4)
+
+julia> d
+Dict{Int64, Vector{Int64}} with 4 entries:
+  4 => [1, 2, 3]
+  2 => [1, 3, 4]
+  3 => [1, 2, 4]
+  1 => [2, 3, 4]
+```
+
+In either case, here we create the nine derangements of `{1,2,3,4}`:
+```julia
+julia> [p for p in PermGen(d)]
+9-element Vector{Permutation}:
+ (1,4)(2,3)
+ (1,3,2,4)
+ (1,2,3,4)
+ (1,4,2,3)
+ (1,3)(2,4)
+ (1,3,4,2)
+ (1,2,4,3)
+ (1,4,3,2)
+ (1,2)(3,4)
 ```
 
 **NOTE**: The algorithm for `PermGen(n::Int)` is reasonably efficient, but the algorithm for `PermGen(d::Dict)` is not. I hope to improve this in future versions. 
