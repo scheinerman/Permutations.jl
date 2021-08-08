@@ -272,9 +272,9 @@ julia> longest_decreasing(p)
   1
 ```
 
-## `Permutation` iteration
+## Iteration
 
-The function `PermGen` creates a permutation iterator.
+The function `PermGen` creates a `Permutation` iterator.
 
 With an integer argument, `PermGen(n)` creates an iterator for all permutations of length `n`. 
 ```julia
@@ -330,6 +330,14 @@ julia> [p for p in PermGen(d)]
  (1,4,3,2)
  (1,2)(3,4)
 ```
+
+The `PermGen` iterator generates permutations one at a time. So this calculation does not use much memory:
+```julia
+julia> sum(length(fixed_points(p)) for p in PermGen(10))
+3628800
+```
+> Aside: Notice that the answer is `10!`. It is a fun exerice to show that among all the `n!` permutations of `{1,2,...,n}`, the number of fixed points is `n!`.
+
 
 **NOTE**: The algorithm for `PermGen(n::Int)` is reasonably efficient, but the algorithm for `PermGen(d::Dict)` is not. I hope to improve this in future versions. 
 
