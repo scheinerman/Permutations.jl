@@ -109,3 +109,13 @@ end
     @test inv(CoxeterDecomposition(6, [1, 3, 5])) == CoxeterDecomposition(6, [1, 3, 5])
     @test CoxeterDecomposition(RandomPermutation(100)) isa CoxeterDecomposition # check for stack overflow
 end
+
+
+@testset "PermGen" begin
+    X = PermGen(4)
+    @test length(X) == factorial(4)
+
+    d = [[2, 3, 4], [1, 3, 4], [1, 2, 4], [1, 2, 3]]
+    X = PermGen(d)
+    @test sum(length(fixed_points(p)) for p in X) == 0
+end

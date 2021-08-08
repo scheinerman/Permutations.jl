@@ -1,5 +1,5 @@
 module Permutations
-using LinearAlgebra
+using LinearAlgebra, Combinatorics
 
 import Base:
     length,
@@ -538,5 +538,6 @@ end
 
 include("matrix.jl")
 include("sqrt.jl")
+include("perm_gen.jl")
 
 end # end of module Permutations

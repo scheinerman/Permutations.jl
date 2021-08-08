@@ -272,6 +272,51 @@ julia> longest_decreasing(p)
   1
 ```
 
+## `Permutation` iteration
+
+The function `PermGen` creates a permutation iterator.
+
+With an integer argument, `PermGen(n)` creates an iterator for all permutations of length `n`. 
+```julia
+julia> for p in PermGen(3)
+       println(p)
+       end
+(1)(2)(3)
+(1)(2,3)
+(1,2)(3)
+(1,2,3)
+(1,3,2)
+(1,3)(2)
+```
+
+Alternatively, `PermGen` may be called with a dictionary of lists or list of lists argument, `d`. 
+The permutations generated will have the property that the value of the permutation at argument `k` must be one of the values stored in `d[k]`. 
+For example, to find all derangements of `{1,2,3,4}` we do this:
+```julia
+julia> d = [ [2,3,4], [1,3,4], [1,2,4], [1,2,3]]
+4-element Vector{Vector{Int64}}:
+ [2, 3, 4]
+ [1, 3, 4]
+ [1, 2, 4]
+ [1, 2, 3]
+
+julia> for p in PermGen(d)
+       println(p)
+       end
+(1,4)(2,3)
+(1,3,2,4)
+(1,2,3,4)
+(1,4,2,3)
+(1,3)(2,4)
+(1,3,4,2)
+(1,2,4,3)
+(1,4,3,2)
+(1,2)(3,4)
+```
+
+**NOTE**: The algorithm for `PermGen(n::Int)` is reasonably efficient, but the algorithm for `PermGen(d::Dict)` is not. I hope to improve this in future versions. 
+
+
 ## Conversion to a `Dict`
 
 For a permutation `p`, calling `dict(p)` returns a dictionary that behaves
