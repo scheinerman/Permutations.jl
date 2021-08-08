@@ -195,7 +195,7 @@ julia> two_row(reverse(p))
 ```
 
 
-## Additional constructors
+## Additional Constructors
 
 For convenience, identity and random permutations can be constructed
 like this:
