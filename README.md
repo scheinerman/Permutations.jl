@@ -338,6 +338,7 @@ julia> sum(length(fixed_points(p)) for p in PermGen(10))
 ```
 > Aside: Notice that the answer is `10!`. It is a fun exerice to show that among all the `n!` permutations of `{1,2,...,n}`, the number of fixed points is `n!`.
 
+Thanks to [Jonah Scheinerman](https://github.com/jscheiny) for the implementation of `PermGen` for restricted permutations. 
 
 
 ## Conversion to a `Dict`
