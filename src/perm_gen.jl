@@ -4,6 +4,14 @@ function make_lists(d::Dict{Int,Vector{Int}})
     return allow
 end
 
+
+"""
+    iter_perms
+
+This unexported method is the engine beneth `GenPerms`. The difference is this 
+returns a list of vectors, where each vector is a permutation of `1:n` based 
+on the table in `allow`.
+"""
 function iter_perms(allow::Vector{Vector{Int}}, p::Vector{Int} = Int[])
     n = length(allow)
     k = length(p)
@@ -16,6 +24,8 @@ function iter_perms(allow::Vector{Vector{Int}}, p::Vector{Int} = Int[])
     nested_its = Iterators.map((x) -> iter_perms(allow, [p; x]), valid_nexts)
     return Iterators.flatten(nested_its)
 end
+
+iter_perms(d::Dict{Int,Vector{Int}}) = iter_perms(make_lists(d))
 
 
 
@@ -90,3 +100,13 @@ function all_allow(n::Int)
     end
     return d
 end
+
+export DerangeGen
+
+"""
+    DerangeGen(n::Int)
+
+Create an iterator for all derangements of `{1,2,...,n}`. These are 
+all permutations without any fixed points. 
+"""
+DerangeGen(n::Int) = PermGen(deranged_allow(n))

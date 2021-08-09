@@ -118,4 +118,7 @@ end
     d = [[2, 3, 4], [1, 3, 4], [1, 2, 4], [1, 2, 3]]
     X = PermGen(d)
     @test sum(length(fixed_points(p)) for p in X) == 0
+
+    X = DerangeGen(5)
+    @test length(collect(X)) == 44
 end

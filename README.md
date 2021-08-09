@@ -279,7 +279,7 @@ The function `PermGen` creates a `Permutation` iterator.
 With an integer argument, `PermGen(n)` creates an iterator for all permutations of length `n`. 
 ```julia
 julia> for p in PermGen(3)
-       println(p)
+           println(p)
        end
 (1)(2)(3)
 (1)(2,3)
@@ -305,7 +305,7 @@ julia> d = [ [2,3,4], [1,3,4], [1,2,4], [1,2,3] ]
 julia> d = Dict{Int, Vector{Int}}();
 
 julia> for k=1:4
-       d[k] = setdiff(1:4,k)
+           d[k] = setdiff(1:4,k)
        end
 
 julia> d
@@ -337,6 +337,22 @@ julia> sum(length(fixed_points(p)) for p in PermGen(10))
 3628800
 ```
 > Aside: Notice that the answer is `10!`. It is a fun exerice to show that among all the `n!` permutations of `{1,2,...,n}`, the number of fixed points is `n!`.
+
+We provide `DerangeGen(n)` which generates all derangements of `{1,2,...,n}`, i.e., all permutations without fixed points.
+```julia
+julia> for p in DerangeGen(4)
+           println(p)
+       end
+(1,2)(3,4)
+(1,2,3,4)
+(1,2,4,3)
+(1,3,4,2)
+(1,3)(2,4)
+(1,3,2,4)
+(1,4,3,2)
+(1,4,2,3)
+(1,4)(2,3)
+```
 
 Thanks to [Jonah Scheinerman](https://github.com/jscheiny) for the implementation of `PermGen` for restricted permutations. 
 
