@@ -1,41 +1,24 @@
-
-function make_lists(allow::Vector{Vector{Int}})
-    n = length(allow)
-    ranges = Tuple(allow)
-    return Base.Generator(vectorize, Iterators.product(ranges...))
-end
-
-
 function make_lists(d::Dict{Int,Vector{Int}})
     n = maximum(keys(d))
     allow = [d[k] for k = 1:n]
-    return make_lists(allow)
+    return allow
 end
 
-vectorize(a::NTuple{N,Int}) where {N} = [a...]
+function iter_perms(allow::Vector{Vector{Int}}, p::Vector{Int} = Int[])
+    n = length(allow)
+    k = length(p)
 
-function is_ok_perm(v::Vector{Int})
-    n = length(v)
-    if any(v .> n) || any(v .< 1) || length(v) != length(unique(v))
-        return false
+    if n == k
+        return [p]
     end
-    return true
+
+    valid_nexts = setdiff(allow[k+1], p)
+    nested_its = Iterators.map((x) -> iter_perms(allow, [p; x]), valid_nexts)
+    return Iterators.flatten(nested_its)
 end
 
-function is_ok_perm(t::NTuple{N,Int}) where {N}
-    v = [t...]
-    is_ok_perm(v)
-end
 
 
-
-function RPG(allow::Dict{Int,Vector{Int}})
-    return Iterators.filter(is_ok_perm, make_lists(allow))
-end
-
-function RPG(allow::Vector{Vector{Int}})
-    return Iterators.filter(is_ok_perm, make_lists(allow))
-end
 
 
 export PermGen
@@ -79,9 +62,13 @@ julia> for p in PermGen(d)
 (1,2)(3,4)
 ```
 """
+function PermGen(allow::Vector{Vector{Int}})
+    X = iter_perms(allow)
+    return Iterators.map(Permutation, X)
+end
+PermGen(d::Dict{Int,Vector{Int}}) = PermGen(make_lists(d))
+
 PermGen(n::Int) = Base.Generator(Permutation, permutations(1:n))
-PermGen(d::Dict{Int,Vector{Int}}) = Base.Generator(Permutation, RPG(d))
-PermGen(d::Vector{Vector{Int}}) = Base.Generator(Permutation, RPG(d))
 
 
 
