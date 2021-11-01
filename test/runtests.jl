@@ -31,7 +31,11 @@ using Permutations
     @test length(longest_decreasing(p)) == 2
     @test length(fixed_points(p)) == 2
     @test sign(p) == -1
-    @test hash(p) == hash(p.data)
+    if Sys.WORD_SIZE == 32
+        @test_skip hash(p) == hash(p.data)
+    else
+        @test hash(p) == hash(p.data)
+    end
 
     M = two_row(p)
     @test M[2, :] == row
