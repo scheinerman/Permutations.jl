@@ -30,6 +30,7 @@ export inv, cycles, cycle_string
 export order, matrix, fixed_points
 export longest_increasing, longest_decreasing, reverse, sign
 export hash, dict, Transposition
+export apply_transposition, apply_transposition!
 export CoxeterDecomposition  # no reason to expose CoxeterGenerator
 
 # Defines the Permutation class. Permutations are bijections of 1:n.
@@ -43,7 +44,7 @@ abstract type AbstractPermutation end
 * `Permutation(list)` creates a new `Permutation`. Here `list` must be a rearrangement of `1:n`.
 * `Permutation(n)` creates the identity `Permutation` of `1:n`.
 * `Permutation(n,k)` creates the `k`'th `Permutation` of `1:n`.
-* `Permutation(P::Matrix{Int})` creates a `Permutation` from a permutation matrix. 
+* `Permutation(P::Matrix{Int})` creates a `Permutation` from a permutation matrix.
 * `Permutation(cycles::Vector{Vector{Int}})` creates a `Permutation` from a list of disjoint cycles.
 """
 struct Permutation <: AbstractPermutation
@@ -135,7 +136,7 @@ end
 
 # Inverse of a permutation
 """
-    inv(p::Permutation) 
+    inv(p::Permutation)
 
 Give the inverse of `Permutation` `p`. This may
 also be computed with `p'`.
@@ -212,7 +213,7 @@ function array2string(a::Array{Int,1})
 end
 
 """
-    sign(p::Permutation) 
+    sign(p::Permutation)
 
 Return `+1` if`p` is an even `Permtuation` and `-1` if p is odd.
 """
@@ -389,6 +390,30 @@ function dict(p::Permutation)::Dict{Int,Int}
         d[i] = p(i)
     end
     return d
+end
+
+"""
+    apply_transposition!(p::Permutation, i, j)
+
+Compose a permutation `p` in-place with the transposition `(i, j)`.
+"""
+function apply_transposition!(p::Permutation, i::Integer, j::Integer)
+    n = length(p)
+    @assert 0 < i ≤ n && 0 < j ≤ n && i ≠ j
+    p.data[i], p.data[j] = p.data[j], p.data[i]
+end
+
+"""
+    apply_transposition(p::Permutation, i, j)
+
+Return a new permutation obtained by composing `p` with the transposition `(i, j)`.
+"""
+function apply_transposition(p::Permutation, i::Integer, j::Integer)
+    n = length(p)
+    @assert 0 < i ≤ n && 0 < j ≤ n && i ≠ j
+    data = copy(p.data)
+    data[i], data[j] = data[j], data[i]
+    return Permutation(data)
 end
 
 #####

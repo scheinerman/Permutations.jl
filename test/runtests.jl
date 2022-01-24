@@ -1,6 +1,8 @@
 using Test
 using Permutations
 
+@testset verbose = true "Permutations.jl" begin
+
 @testset "Permutation" begin
     p = Permutation(7:-1:1)
     i = Permutation(7)
@@ -81,9 +83,16 @@ end
     end
 end
 
-@testset "Transposition function" begin
+@testset "Transpositions" begin
     p = Transposition(10, 3, 6)
     @test p == inv(p)
+
+    p1 = Permutation(1:10)
+    p2 = apply_transposition(p1, 3, 7)
+    @test p2.data == [1, 2, 7, 4, 5, 6, 3, 8, 9, 10]
+    @test p1 == p2 * p2
+    apply_transposition!(p1, 3, 7)
+    @test p1 == p2
 end
 
 @testset "Matrix conversion" begin
@@ -125,4 +134,6 @@ end
 
     X = DerangeGen(5)
     @test length(collect(X)) == 44
+end
+
 end
