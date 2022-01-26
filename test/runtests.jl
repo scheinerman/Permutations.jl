@@ -61,7 +61,9 @@ using Permutations
     for k = 1:12
         @test p(k) == d[k]
     end
-
+    for (k, x) in enumerate(p)
+        @test x == d[k]
+    end
 
     p = RandomPermutation(12)
     pp = p * p
