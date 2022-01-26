@@ -281,7 +281,7 @@ julia> longest_decreasing(p)
 
 The function `PermGen` creates a `Permutation` iterator.
 
-With an integer argument, `PermGen(n)` creates an iterator for all permutations of length `n`. 
+With an integer argument, `PermGen(n)` creates an iterator for all permutations of length `n`.
 ```julia
 julia> for p in PermGen(3)
            println(p)
@@ -304,8 +304,8 @@ julia> d = [ [2,3,4], [1,3,4], [1,2,4], [1,2,3] ]
  [1, 3, 4]
  [1, 2, 4]
  [1, 2, 3]
- ```
- Thus `d[1]` gives all allowable values for the first position in the permutation, and so forth. We could equally well have done this:
+```
+Thus `d[1]` gives all allowable values for the first position in the permutation, and so forth. We could equally well have done this:
 ```
 julia> d = Dict{Int, Vector{Int}}();
 
