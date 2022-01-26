@@ -1,5 +1,10 @@
 # Permutations
 
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://gdalle.github.io/Permutations.jl/stable)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://gdalle.github.io/Permutations.jl/dev)
+[![Build Status](https://github.com/gdalle/Permutations.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/gdalle/Permutations.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Build Status](https://travis-ci.com/gdalle/Permutations.jl.svg?branch=main)](https://travis-ci.com/gdalle/Permutations.jl)
+[![Coverage](https://codecov.io/gh/gdalle/Permutations.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/gdalle/Permutations.jl)
 
 This is documentation for a `Permutation` data type for Julia. We only
 consider permutations of sets of the form `{1,2,3,...,n}` where `n` is
