@@ -108,6 +108,8 @@ end
 getindex(p::Permutation, k::Int) = p.data[k]
 (p::Permutation)(k::Int) = p.data[k]
 
+# Iteration utility
+Base.iterate(p::Permutation, state=1) = state > length(p) ? nothing : (p[state], state+1)
 
 
 # Create a two-row representation of this permutation
