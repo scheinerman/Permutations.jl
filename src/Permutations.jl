@@ -165,8 +165,8 @@ function cycles(p::Permutation)
     n = length(p)
     result = Array{Int,1}[]
     todo = trues(n)
-    while any(todo)
-        k = findfirst(todo)
+    k = 1
+    while k !== nothing
         todo[k] = false
         cycle = [k]
         j = p[k]
@@ -176,6 +176,7 @@ function cycles(p::Permutation)
             j = p[j]
         end
         push!(result, cycle)
+        k = findnext(todo, k)
     end
     return result
 end
