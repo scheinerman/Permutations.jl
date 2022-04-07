@@ -49,9 +49,9 @@ abstract type AbstractPermutation end
 """
 struct Permutation <: AbstractPermutation
     data::Vector{Int}
-    function Permutation(dat::Vector{Int})
+    function Permutation(dat::Vector{Int}; validate=true)
         n = length(dat)
-        if sort(dat) != collect(1:n)
+        if validate && sort(dat) != collect(1:n)
             error("Improper array: must be a permutation of 1:n")
         end
         new(dat)
