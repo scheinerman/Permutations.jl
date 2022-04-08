@@ -1,5 +1,6 @@
 using Test
 using Permutations
+using Random
 
 @testset verbose = true "Permutations.jl" begin
 
@@ -136,6 +137,45 @@ end
 
     X = DerangeGen(5)
     @test length(collect(X)) == 44
+end
+
+@testset verbose = true "CompiledPermutation" begin
+
+    @test_throws ArgumentError CompiledPermutation([4, 3, 3, 5, 1])        
+
+    @testset "Construction & permute! (exhaustive)" begin
+        # lots of tests because we use a complex algorithm with @inbounds
+        # and don't want to risk segfaults or memory corruption
+
+        N0, N1 = (4, 4) #Set to (5, 20) or more when actively developing CompiledPermutation
+        Random.seed!(1729)
+        t = @elapsed for n in vcat(0:2000)
+            p = fill(0, n)
+            v = rand(n)
+            all = n <= N0
+            for i in 1:(all ? (n+3)^n : N1)
+                if all
+                    digits!(p, i, base=n+3)
+                    p .-= 2
+                elseif i < N1 ÷ 2
+                    rand!(p, -1:n+1)
+                else
+                    p .= 1:n
+                    shuffle!(p)
+                end
+                if (all || i < N1 ÷ 2) && (sum(p) != sum(1:n) || sort(p) != collect(1:n))
+                    @test_throws ArgumentError CompiledPermutation(p)
+                else
+                    @test v[p] == permute!(v, CompiledPermutation(p)) === v
+                end
+            end
+        end
+        println("Exhaustive tests took $t seconds.")
+    end
+
+    @testset "order" begin
+        @test order(CompiledPermutation([2, 3, 1, 6, 7, 8, 5, 4, 9])) == 6
+    end
 end
 
 end
