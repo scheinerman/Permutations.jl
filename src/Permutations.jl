@@ -4,6 +4,7 @@ using LinearAlgebra, Combinatorics
 import Base:
     length,
     show,
+    invperm,
     inv,
     reverse,
     ==,
@@ -143,7 +144,10 @@ end
 Give the inverse of `Permutation` `p`. This may
 also be computed with `p'`.
 """
-function inv(p::Permutation)
+inv(p::AbstractPermutation) = invperm(p)
+adjoint(p::AbstractPermutation) = invperm(p)
+
+function invperm(p::Permutation)
     n = length(p)
     data = zeros(Int, n)
     for k = 1:n
@@ -152,8 +156,6 @@ function inv(p::Permutation)
     end
     return Permutation(data)
 end
-
-adjoint(p::Permutation) = inv(p)
 
 # Find the cycles in a permutation
 """
@@ -545,8 +547,7 @@ function *(A::CoxeterDecomposition, B::CoxeterDecomposition)
     CoxeterDecomposition(length(A), [A.terms; B.terms])
 end
 
-inv(A::CoxeterDecomposition) = CoxeterDecomposition(A.n, reverse(A.terms))
-adjoint(A::CoxeterDecomposition) = inv(A)
+invperm(A::CoxeterDecomposition) = CoxeterDecomposition(A.n, reverse(A.terms))
 
 function show(io::IO, p::CoxeterDecomposition)
     print(io, "Permutation of 1:$(length(p)): ")
