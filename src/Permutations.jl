@@ -32,6 +32,7 @@ export longest_increasing, longest_decreasing, reverse, sign
 export hash, dict, Transposition
 export apply_transposition, apply_transposition!
 export CoxeterDecomposition  # no reason to expose CoxeterGenerator
+export CompiledPermutation
 
 # Defines the Permutation class. Permutations are bijections of 1:n.
 
@@ -187,7 +188,7 @@ end
 Create a nice, prinatble string representation
 from the cycle structure of the permutation `p`.
 """
-function cycle_string(p::Permutation)::String
+function cycle_string(p::AbstractPermutation)::String
     if length(p) == 0
         return "()"
     end
@@ -264,6 +265,9 @@ end
 function show(io::IO, p::Permutation)
     print(io, cycle_string(p))
 end
+function show(io::IO, p::AbstractPermutation)
+    print(io, length(p), "-element ", typeof(p), ": ", cycle_string(p))
+end
 
 # Find the smallest positive n such that p^n is the identity
 """
@@ -272,7 +276,7 @@ end
 Return the smallest positive integer `n`
 such that `p^n` is the identity `Permutation`.
 """
-function order(p::Permutation)
+function order(p::AbstractPermutation)
     result = 1
     clist = cycles(p)
     for c in clist
@@ -567,5 +571,6 @@ end
 include("matrix.jl")
 include("sqrt.jl")
 include("perm_gen.jl")
+include("CompiledPermutation.jl")
 
 end # end of module Permutations
