@@ -178,4 +178,14 @@ end
     end
 end
 
+@testset "invpermute" begin
+    v = rand(17)
+    p = shuffle(1:17)
+    P = Permutation(p)
+    cp = CompiledPermutation(p)
+    @test v[invperm(p)] == invpermute(v, p) == invpermute(v, P) == invpermute(v, cp) == v[invperm(p)]
+    @test_throws DimensionMismatch invpermute(v, Permutation(shuffle(1:18)))
+    @test_throws DimensionMismatch invpermute(v, Permutation(shuffle(1:16)))
+end
+
 end
