@@ -178,6 +178,14 @@ end
     end
 end
 
+@testset "inv" begin
+    p = RandomPermutation(12)
+    @test inv(inv(p)) == p
+    v = rand(12)
+    @test p * inv(p) == Permutation(12)
+    @test inv(p) == p' == invperm(p)
+end
+
 @testset "invpermute" begin
     v = rand(17)
     p = shuffle(1:17)
