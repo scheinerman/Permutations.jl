@@ -27,7 +27,7 @@ import Random: randperm
 
 export Permutation, RandomPermutation
 export length, getindex, array, two_row
-export inv, cycles, cycle_string
+export invpermute, cycles, cycle_string
 export order, matrix, fixed_points
 export longest_increasing, longest_decreasing, reverse, sign
 export hash, dict, Transposition
@@ -157,6 +157,25 @@ function invperm(p::Permutation)
     end
     return Permutation(data)
 end
+
+"""
+    invpermute(v, p::AbstractVector)
+    invpermute(v, p::AbstractPermutation)
+
+Equivalent to `v[invperm(p)]` but often more efficient and does not check if `p` is a 
+permutation.
+"""
+Base.@propagate_inbounds function invpermute(v, p::AbstractVector)
+    out = similar(v)
+    out[p] = v
+    out
+end
+function invpermute(v, p::Permutation)
+    axes(v) == axes(p.data) || throw(DimensionMismatch("Data and permutation must have the same axes."))
+    @inbounds invpermute(v, p.data)
+end
+invpermute(v, p::AbstractPermutation) = invpermute(v, Permutation(p))
+
 
 # Find the cycles in a permutation
 """
