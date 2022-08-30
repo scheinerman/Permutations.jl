@@ -7,4 +7,4 @@
 
 This packages defines a `Permutation` type for Julia, along with several basic operations on it.
 
-Take a look at the [documentation](https://gdalle.github.io/Permutations.jl/dev/) to get started!
+Take a look at the [documentation](https://scheinerman.github.io/Permutations.jl/dev/) to get started!
