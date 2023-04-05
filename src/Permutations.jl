@@ -216,25 +216,9 @@ function cycle_string(p::AbstractPermutation)::String
     str = ""
     cc = cycles(p)
     for c in cc
-        str *= array2string(c)
+        str *= "(" * join(c, ',') * ")"
     end
     return str
-end
-
-# helper function for cycle_string (not exposed). Converts an integer
-# array such as [1,3,5,2] into the string "(1,3,5,2)".
-function array2string(a::Array{Int,1})
-    n = length(a)
-    res = "("
-    for k = 1:n
-        res *= string(a[k])
-        if k < n
-            res *= ","
-        else
-            res *= ")"
-        end
-    end
-    return res
 end
 
 """
