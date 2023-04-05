@@ -7,7 +7,7 @@ This package defines a `Permutation`  type for Julia. We only
 consider permutations of sets of the form `{1,2,3,...,n}` where `n` is
 a positive integer.
 
-A `Permutation` object is created from a one-dimensional arry of
+A `Permutation` object is created from a one-dimensional array of
 integers containing each of the values `1` through `n` exactly once.
 ```
 julia> a = [4,1,3,2,6,5];

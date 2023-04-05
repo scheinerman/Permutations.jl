@@ -118,7 +118,7 @@ Base.iterate(p::Permutation, state=1) = state > length(p) ? nothing : (p[state],
 """
     two_row(p::Permutation)
 
-Createa a two-row representation of the `Permutation` `p`
+Creates a two-row representation of the `Permutation` `p`
 in which the first row is `1:n` and the second row are the
 values `p(1), p(2), ..., p(n)`.
 """
