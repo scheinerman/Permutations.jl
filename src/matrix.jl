@@ -1,4 +1,4 @@
-# Represent as a permtuation matrix.
+# Represent as a permutation matrix.
 """
     Matrix(p::Permutation)
 
