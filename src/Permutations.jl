@@ -92,7 +92,7 @@ Create a random permutation of `1:n`, each with probability `1/factorial(n)`.
 """
 RandomPermutation(n::Int) = Permutation(randperm(n))
 
-# Returns the number of elements in the Permtuation
+# Returns the number of elements in the Permutation
 
 """
     length(p::Permutation)
@@ -224,7 +224,7 @@ end
 """
     sign(p::Permutation)
 
-Return `+1` if`p` is an even `Permtuation` and `-1` if p is odd.
+Return `+1` if`p` is an even `Permutation` and `-1` if p is odd.
 """
 function sign(p::Permutation)::Int
     n = length(p)
