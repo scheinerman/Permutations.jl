@@ -196,4 +196,15 @@ end
     @test_throws DimensionMismatch invpermute(v, Permutation(shuffle(1:16)))
 end
 
+@testset "ewens" begin
+
+    @test_throws ArgumentError Permutations.EwensPermutation(10, -1)
+    
+    p = Permutations.EwensPermutation(20,0)
+    @test length(cycles(p))==1
+
+    q = Permutations.EwensPermutation(20, 100000000)
+    @test length(cycles(q))==20
+end
+
 end
