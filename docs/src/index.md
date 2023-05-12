@@ -212,6 +212,8 @@ julia> RandomPermutation(10)
 (1,7,6,10,3,2,8,4)(5,9)
 ```
 
+Other types of (non-uniform) random permutations are implemented, such as Ewens-distributed random permutations. 
+
 In addition, we can use `Permutation(n,k)` to create the
 `k`'th permutation of the set `{1,2,...,n}`. Of course,
 this requires `k` to be between `1` and `n!`.
