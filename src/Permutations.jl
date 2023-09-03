@@ -30,7 +30,7 @@ export length, getindex, array, two_row
 export invpermute, cycles, cycle_string
 export order, matrix, fixed_points
 export longest_increasing, longest_decreasing, reverse, sign
-export hash, dict, Transposition
+export hash, dict, Transposition, CyclePermutation
 export apply_transposition, apply_transposition!
 export CoxeterDecomposition  # no reason to expose CoxeterGenerator
 export CompiledPermutation
@@ -51,7 +51,7 @@ abstract type AbstractPermutation end
 """
 struct Permutation <: AbstractPermutation
     data::Vector{Int}
-    function Permutation(dat::Vector{Int}; validate=true)
+    function Permutation(dat::Vector{Int}; validate = true)
         n = length(dat)
         if validate && sort(dat) != collect(1:n)
             error("Improper array: must be a permutation of 1:n")
@@ -70,6 +70,17 @@ end
 # create the identity permutation
 Permutation(n::Int) = Permutation(collect(1:n))
 
+
+
+"""
+    CyclePermutation(n::Int)::Permutation
+
+Create the permutation with the single cycle `(1,2,...,n)`.
+"""
+function CyclePermutation(n::Int)::Permutation
+    @assert n > 0 "Require n to be positive"
+    return Permutation([collect(1:n)])
+end
 
 
 """
@@ -111,7 +122,8 @@ getindex(p::Permutation, k::Int) = p.data[k]
 (p::Permutation)(k::Int) = p.data[k]
 
 # Iteration utility
-Base.iterate(p::Permutation, state=1) = state > length(p) ? nothing : (p[state], state+1)
+Base.iterate(p::Permutation, state = 1) =
+    state > length(p) ? nothing : (p[state], state + 1)
 
 
 # Create a two-row representation of this permutation
@@ -171,7 +183,8 @@ Base.@propagate_inbounds function invpermute(v, p::AbstractVector)
     out
 end
 function invpermute(v, p::Permutation)
-    axes(v) == axes(p.data) || throw(DimensionMismatch("Data and permutation must have the same axes."))
+    axes(v) == axes(p.data) ||
+        throw(DimensionMismatch("Data and permutation must have the same axes."))
     @inbounds invpermute(v, p.data)
 end
 invpermute(v, p::AbstractPermutation) = invpermute(v, Permutation(p))

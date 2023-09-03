@@ -98,6 +98,12 @@ end
     @test p1 == p2
 end
 
+@testset "CyclePermutation" begin
+    p = CyclePermutation(9)
+    @test p^8 == inv(p)
+    @test p == Permutation([2,3,4,5,6,7,8,9,1])
+end
+
 @testset "Matrix conversion" begin
     p = RandomPermutation(10)
     M = Matrix(p)

@@ -217,6 +217,14 @@ julia> Permutation(6,701)
 (1,6,3)(2,5)(4)
 ```
 
+The function `CyclePermutation` creates a permutation containing a 
+single cycle of the form `(1,2,...,n)`.
+```
+julia> CyclePermutation(5)
+(1,2,3,4,5)
+```
+
+
 The function `Transposition` is used to create a permutation containing
 a single two-cycle. Use `Transposition(n,a,b)` to create a permutation of 
 `1:n` that swaps `a` and `b`.
