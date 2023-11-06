@@ -237,6 +237,7 @@ This function requires `1 ≤ a ≠ b ≤ n`.
 
 ## Properties
 
+### Fixed point 
 
 A *fixed point* of a permutation `p` is a value `k` such that
 `p[k]==k`. The function `fixed_points` returns a list of the fixed
@@ -251,6 +252,7 @@ julia> fixed_points(p)
  14
  20
 ```
+### Longest increasing and decreasing subsequence
 
 The function `longest_increasing` finds a subsequence of a permutation
 whose elements are in increasing order. Likewise, `longest_decreasing`
@@ -281,6 +283,11 @@ julia> longest_decreasing(p)
   5
   1
 ```
+
+### Test for identity permutation
+
+For a `Permutation`, `p`, the function `isone(p)` returns `true` exactly when 
+`p` is an identity `Permutation`.
 
 ## Iteration
 

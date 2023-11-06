@@ -19,7 +19,8 @@ import Base:
     AbstractMatrix,
     AbstractArray,
     Array,
-    adjoint
+    adjoint,
+    isone
 
 
 import Combinatorics: nthperm
@@ -297,7 +298,7 @@ such that `p^n` is the identity `Permutation`.
 function order(p::AbstractPermutation)
     result = 1
     if length(p) <= 1
-        return 1 
+        return 1
     end
     clist = cycles(p)
     for c in clist
@@ -581,6 +582,17 @@ function show(io::IO, p::CoxeterDecomposition)
         # print(io, "s_$(i)")
         print(io, "($i,$(i+1))")
     end
+end
+
+
+"""
+    isone(p::Permutation)::Bool
+
+Return `true` exactly when `p` is an identity `Permutation`.
+"""
+function isone(p::Permutation)::Bool
+    n = length(p)
+    return p.data == collect(1:n)
 end
 
 
