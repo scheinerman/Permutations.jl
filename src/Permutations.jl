@@ -296,6 +296,9 @@ such that `p^n` is the identity `Permutation`.
 """
 function order(p::AbstractPermutation)
     result = 1
+    if length(p) <= 1
+        return 1 
+    end
     clist = cycles(p)
     for c in clist
         result = lcm(result, length(c))
