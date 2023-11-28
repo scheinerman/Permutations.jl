@@ -39,7 +39,7 @@ export CompiledPermutation
 # Defines the Permutation class. Permutations are bijections of 1:n.
 
 
-abstract type AbstractPermutation end
+abstract type _AbstractPermutation end
 
 """
     Permutation
@@ -50,7 +50,7 @@ abstract type AbstractPermutation end
 * `Permutation(P::Matrix{Int})` creates a `Permutation` from a permutation matrix.
 * `Permutation(cycles::Vector{Vector{Int}})` creates a `Permutation` from a list of disjoint cycles.
 """
-struct Permutation <: AbstractPermutation
+struct Permutation <: _AbstractPermutation
     data::Vector{Int}
     function Permutation(dat::Vector{Int}; validate = true)
         n = length(dat)
@@ -158,8 +158,8 @@ end
 Give the inverse of `Permutation` `p`. This may
 also be computed with `p'`.
 """
-inv(p::AbstractPermutation) = invperm(p)
-adjoint(p::AbstractPermutation) = invperm(p)
+inv(p::_AbstractPermutation) = invperm(p)
+adjoint(p::_AbstractPermutation) = invperm(p)
 
 function invperm(p::Permutation)
     n = length(p)
@@ -188,7 +188,7 @@ function invpermute(v, p::Permutation)
         throw(DimensionMismatch("Data and permutation must have the same axes."))
     @inbounds invpermute(v, p.data)
 end
-invpermute(v, p::AbstractPermutation) = invpermute(v, Permutation(p))
+invpermute(v, p::_AbstractPermutation) = invpermute(v, Permutation(p))
 
 
 # Find the cycles in a permutation
@@ -223,7 +223,7 @@ end
 Create a nice, prinatble string representation
 from the cycle structure of the permutation `p`.
 """
-function cycle_string(p::AbstractPermutation)::String
+function cycle_string(p::_AbstractPermutation)::String
     if length(p) == 0
         return "()"
     end
@@ -284,7 +284,7 @@ end
 function show(io::IO, p::Permutation)
     print(io, cycle_string(p))
 end
-function show(io::IO, p::AbstractPermutation)
+function show(io::IO, p::_AbstractPermutation)
     print(io, length(p), "-element ", typeof(p), ": ", cycle_string(p))
 end
 
@@ -295,7 +295,7 @@ end
 Return the smallest positive integer `n`
 such that `p^n` is the identity `Permutation`.
 """
-function order(p::AbstractPermutation)
+function order(p::_AbstractPermutation)
     result = 1
     if length(p) <= 1
         return 1
@@ -449,7 +449,7 @@ end
 # Decomposing into Coxeter generators
 #####
 
-struct CoxeterGenerator <: AbstractPermutation
+struct CoxeterGenerator <: _AbstractPermutation
     n::Int
     i::Int
     function CoxeterGenerator(n::Int, i::Int)
@@ -506,7 +506,7 @@ end
 Express the `Permutation` `p` as a
 composition of transpositions of the form `(k,k+1)`.
 """
-struct CoxeterDecomposition <: AbstractPermutation
+struct CoxeterDecomposition <: _AbstractPermutation
     n::Int
     terms::Vector{Int}
     function CoxeterDecomposition(n::Int, terms::Vector{Int})

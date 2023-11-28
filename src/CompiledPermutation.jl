@@ -13,7 +13,7 @@ For long vectors it is often still fastest to permute by copying with `v[p]`.
 
 Mutating the fields of a compiled permutation may cause unsafe memory access.
 """
-struct CompiledPermutation{T} <: AbstractPermutation
+struct CompiledPermutation{T} <: _AbstractPermutation
     data::T
     length::Int
     function CompiledPermutation(permutation::AbstractVector{<:Integer}; zero = false)
