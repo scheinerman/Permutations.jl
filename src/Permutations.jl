@@ -604,5 +604,6 @@ include("matrix.jl")
 include("sqrt.jl")
 include("perm_gen.jl")
 include("CompiledPermutation.jl")
+include("extend.jl")
 
 end # end of module Permutations

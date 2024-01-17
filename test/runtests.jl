@@ -209,4 +209,19 @@ using Random
         @test_throws DimensionMismatch invpermute(v, Permutation(shuffle(1:16)))
     end
 
+    @testset "extend" begin 
+        p = RandomPermutation(12)
+        q = extend(p,15)
+
+        for k=1:12 
+            @test p(k) == q(k)
+        end
+        for k=13:15
+            @test q(k) == k 
+        end
+
+    end 
+
 end
+
+

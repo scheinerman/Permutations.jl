@@ -196,6 +196,43 @@ julia> two_row(reverse(p))
  4  7  1  8  6  2  3  5
 ```
 
+### Extension
+
+Permutations of different lengths cannot be composed:
+```
+julia> using Permutations
+
+julia> p = RandomPermutation(8)
+(1,4,2)(3,5)(6,8,7)
+
+julia> q = RandomPermutation(10)
+(1,2,9,4)(3,8,7,10)(5,6)
+
+julia> p*q
+ERROR: Cannot compose Permutations of different lengths
+```
+
+However, the `extend` function can be used to create a new `Permutation` 
+that has greater length:
+```
+julia> p
+(1,4,2)(3,5)(6,8,7)
+
+julia> extend(p,10)
+(1,4,2)(3,5)(6,8,7)(9)(10)
+```
+
+The extended `Permutation` is now able to be composed with the longer one:
+```
+julia> extend(p,10) * q
+(1)(2,9)(3,7,10,5,8,6)(4)
+```
+
+
+
+
+
+
 
 ## Additional Constructors
 
