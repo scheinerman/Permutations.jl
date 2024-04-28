@@ -30,6 +30,11 @@ using Random
         p = Permutation(row)
         @test length(p) == 6
         @test p[1] == 1
+        @test p[Int32(1)] == 1
+        @test p[Int64(1)] == 1
+        @test p[UInt32(1)] == 1
+        @test p[UInt64(1)] == 1
+        @test p[BigInt(1)] == 1
         @test length(longest_increasing(p)) == 4
         @test length(longest_decreasing(p)) == 2
         @test length(fixed_points(p)) == 2
@@ -61,6 +66,11 @@ using Random
         d = dict(p)
         for k = 1:12
             @test p(k) == d[k]
+            @test p(Int32(k)) == d[k]
+            @test p(Int64(k)) == d[k]
+            @test p(UInt32(k)) == d[k]
+            @test p(UInt64(k)) == d[k]
+            @test p(BigInt(k)) == d[k]
         end
         for (k, x) in enumerate(p)
             @test x == d[k]
