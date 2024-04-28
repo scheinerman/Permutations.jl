@@ -119,8 +119,8 @@ end
 ==(p::Permutation, q::Permutation) = p.data == q.data
 
 # Apply the Permutation to an element: p[k] or p(k)
-getindex(p::Permutation, k::Int) = p.data[k]
-(p::Permutation)(k::Int) = p.data[k]
+getindex(p::Permutation, k::Integer) = p.data[k]
+(p::Permutation)(k::Integer) = p.data[k]
 
 # Iteration utility
 Base.iterate(p::Permutation, state = 1) =
