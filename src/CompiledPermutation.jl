@@ -80,7 +80,7 @@ struct CompiledPermutation{T} <: _AbstractPermutation
                     out[cycle_i] = input_j      # register the first
                     out[cycle_i+1] = p_input_j  # 3 as the start of
                     cycle_i += 2                # a cycle (including
-                                                # start of loop)
+                    # start of loop)
                     while true
                         out[cycle_i] = pp_input_j
                         cycle_i += 1
@@ -102,14 +102,14 @@ struct CompiledPermutation{T} <: _AbstractPermutation
                 throw(ArgumentError("Input vector p is not a permutation"))
             end # fixed point do nothing
             nic == 0 && break
-            input_j = findnext(!iszero, p, input_j+1)
+            input_j = findnext(!iszero, p, input_j + 1)
         end
         if cycle_i == 1
             cycle_i = 2
             out[1] = 0
         end
         swap_len = lastindex(out) - swap_i
-        swap_len != 0  && unsafe_copyto!(out, cycle_i, out, swap_i + 1, swap_len)
+        swap_len != 0 && unsafe_copyto!(out, cycle_i, out, swap_i + 1, swap_len)
         resize!(out, cycle_i - 1 + swap_len)
         new{typeof(p)}(out, length(p))
     end
@@ -170,7 +170,7 @@ Base.length(p::CompiledPermutation) = p.length
 Permutation(p::CompiledPermutation) = Permutation(permute!(collect(1:length(p)), p))
 CompiledPermutation(p::Permutation) = CompiledPermutation(p.data)
 
-function cycles(cp::CompiledPermutation{T}) where T
+function cycles(cp::CompiledPermutation{T}) where {T}
     out = Vector{eltype(T)}[]
 
     p = cp.data
