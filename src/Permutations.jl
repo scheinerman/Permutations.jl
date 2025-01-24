@@ -478,7 +478,7 @@ function _coxeter_reduce!(terms::Vector{Int})
             @goto start
         end
         # sort using sᵢsⱼ = sⱼsᵢ
-        if terms[i+1] ≠ terms[i] - 1 && terms[i+1] ≠ terms[i] + 1 && terms[i] > terms[i+1]
+        if terms[i+1] + 1 ≠ terms[i] && terms[i+1] ≠ terms[i] + 1 && terms[i] > terms[i+1]
             terms[i], terms[i+1] = terms[i+1], terms[i]
             @goto start
         end
